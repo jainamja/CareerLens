@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}500 Server Error - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+    <div class="mb-4">
+        <i data-lucide="server-crash" class="text-danger" style="width: 80px; height: 80px;"></i>
+    </div>
+    <h1 class="display-5 fw-bold mb-3">Internal Server Error</h1>
+    <p class="lead text-muted mb-4">Something went wrong on our end. Our team has been notified.</p>
+    <a href="{% url 'dashboard:home' %}" class="btn btn-primary px-4 py-2">
+        <i data-lucide="refresh-cw" style="width: 18px; height: 18px;" class="me-2"></i>
+        Try Again
+    </a>
+</div>
+{% endblock %}

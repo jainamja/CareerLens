@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Log in to CareerLens{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="brand-header">
+            <a href="/" class="brand-logo">
+                <i data-lucide="briefcase"></i>
+                CareerLens
+            </a>
+            <p class="brand-subtitle">Welcome back. Continue managing your resumes, job matches, and applications.</p>
+        </div>
+
+        {% if form.errors %}
+            <div class="alert-error">
+                <div class="d-flex align-items-center gap-2">
+                    <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+                    <span>Invalid username or password. Please try again.</span>
+                </div>
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'accounts:login' %}">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                {{ form.username }}
+            </div>
+            
+            <div class="mb-4">
+                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                {{ form.password }}
+            </div>
+            
+            <button type="submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
+                Log In
+                <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
+            </button>
+        </form>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="{% url 'accounts:register' %}">Create one</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Add Bootstrap form control classes to django generated fields
+    document.addEventListener("DOMContentLoaded", function() {
+        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
+        inputs.forEach(input => {
+            input.classList.add('form-control');
+        });
+    });
+</script>
+{% endblock %}

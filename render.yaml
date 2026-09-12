@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: careerlens
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: careerlens-db
+          property: connectionString
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+
+databases:
+  - name: careerlens-db
+    databaseName: careerlens
+    user: careerlens_user

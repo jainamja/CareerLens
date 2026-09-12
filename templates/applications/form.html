@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{% if application %}{% url 'applications:detail' application.pk %}{% else %}{% url 'applications:list' %}{% endif %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted">
+                    <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                </a>
+                <h1 class="h3 fw-bold mb-0">{{ title }}</h1>
+            </div>
+
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3 border-0 bg-danger bg-opacity-10 text-danger mb-4">
+                            {% for error in form.non_field_errors %}
+                                <p class="mb-0 d-flex align-items-center gap-2">
+                                    <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
+                                    {{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-4">
+                            <label for="{{ form.job.id_for_label }}" class="form-label fw-medium text-dark">Job <span class="text-danger">*</span></label>
+                            {{ form.job }}
+                            {% if form.job.errors %}
+                                <div class="text-danger small mt-1">{{ form.job.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text mt-2 text-muted">Select a job you are currently tracking.</div>
+                        </div>
+
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.status.id_for_label }}" class="form-label fw-medium text-dark">Status <span class="text-danger">*</span></label>
+                                {{ form.status }}
+                                {% if form.status.errors %}
+                                    <div class="text-danger small mt-1">{{ form.status.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.applied_date.id_for_label }}" class="form-label fw-medium text-dark">Applied Date</label>
+                                {{ form.applied_date }}
+                                {% if form.applied_date.errors %}
+                                    <div class="text-danger small mt-1">{{ form.applied_date.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="{{ form.notes.id_for_label }}" class="form-label fw-medium text-dark">Notes</label>
+                            {{ form.notes }}
+                            {% if form.notes.errors %}
+                                <div class="text-danger small mt-1">{{ form.notes.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text mt-2 text-muted">Add interview details, follow-ups, or contact information.</div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% if application %}{% url 'applications:detail' application.pk %}{% else %}{% url 'applications:list' %}{% endif %}" class="btn btn-light px-4">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4 d-flex align-items-center gap-2">
+                                <i data-lucide="save" style="width: 18px; height: 18px;"></i>
+                                Save Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

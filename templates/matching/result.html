@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Match Result - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <a href="{% url 'jobs:detail' match.job.pk %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted" title="Back to Job">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+        </a>
+        <h1 class="h3 fw-bold mb-0">Match Analysis</h1>
+        
+        <div class="ms-auto d-flex gap-2">
+            <a href="{% url 'resumes:detail' match.resume.pk %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                View Resume
+            </a>
+            <form method="post" class="m-0">
+                {% csrf_token %}
+                <button type="submit" name="recalculate" class="btn btn-outline-primary d-flex align-items-center gap-2">
+                    <i data-lucide="refresh-cw" style="width: 16px; height: 16px;"></i>
+                    Recalculate
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Context Card -->
+    <div class="card shadow-sm border-0 mb-4 bg-light" style="border-radius: 12px;">
+        <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+                <p class="text-muted small text-uppercase fw-bold mb-1">Job</p>
+                <h5 class="fw-bold mb-1">{{ match.job.title }}</h5>
+                <p class="text-secondary small mb-0">{{ match.job.company }} {% if match.job.location %}• {{ match.job.location }}{% endif %}</p>
+            </div>
+            
+            <div class="d-none d-md-flex align-items-center text-muted px-3">
+                <i data-lucide="arrow-left-right" style="width: 24px; height: 24px; opacity: 0.5;"></i>
+            </div>
+            
+            <div class="text-md-end">
+                <p class="text-muted small text-uppercase fw-bold mb-1">Resume</p>
+                <h5 class="fw-bold mb-1">{{ match.resume.original_filename }}</h5>
+                <p class="text-secondary small mb-0">Updated {{ match.resume.updated_at|date:"M j, Y" }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scores -->
+    <div class="row g-4 mb-4">
+        <!-- Skill Coverage -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <h5 class="fw-bold text-muted mb-4 d-flex justify-content-center align-items-center gap-2">
+                        <i data-lucide="target" class="text-primary" style="width: 20px; height: 20px;"></i>
+                        Skill Coverage
+                    </h5>
+                    
+                    <div class="display-3 fw-bold text-dark mb-3">
+                        {{ match.skill_coverage_score|floatformat:"0" }}%
+                    </div>
+                    
+                    <p class="text-muted mb-0">
+                        {% with total_req=match.job.job_skills.all|length %}
+                            {% if total_req > 0 %}
+                                {{ match.matched_skills|length }} of {{ match.matched_skills|length|add:match.missing_skills|length }} required skills matched
+                            {% else %}
+                                This job has no required skills specified
+                            {% endif %}
+                        {% endwith %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Text Similarity -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <h5 class="fw-bold text-muted mb-4 d-flex justify-content-center align-items-center gap-2">
+                        <i data-lucide="file-search" class="text-success" style="width: 20px; height: 20px;"></i>
+                        Text Similarity
+                    </h5>
+                    
+                    <div class="display-3 fw-bold text-dark mb-3">
+                        {{ match.text_similarity_score|floatformat:"0" }}%
+                    </div>
+                    
+                    <p class="text-muted mb-0">
+                        TF-IDF cosine similarity between resume and job description
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Skills Breakdown -->
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                        <i data-lucide="check-circle-2" class="text-success" style="width: 20px; height: 20px;"></i>
+                        Matched Skills
+                    </h5>
+                    
+                    {% if match.matched_skills %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in match.matched_skills %}
+                                <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small bg-light p-3 rounded">No required skills were matched.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                        <i data-lucide="x-circle" class="text-danger" style="width: 20px; height: 20px;"></i>
+                        Missing Required Skills
+                    </h5>
+                    
+                    {% if match.missing_skills %}
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for skill in match.missing_skills %}
+                                <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small bg-light p-3 rounded d-flex align-items-center gap-2">
+                            <i data-lucide="check" class="text-success" style="width: 16px; height: 16px;"></i>
+                            All required skills detected!
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        {% if matched_optional or missing_optional %}
+        <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                        <i data-lucide="plus-circle" class="text-secondary" style="width: 20px; height: 20px;"></i>
+                        Optional Skills
+                    </h5>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-muted small text-uppercase mb-3">Matched Optional</h6>
+                            {% if matched_optional %}
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for skill in matched_optional %}
+                                        <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                            {{ skill }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small">None</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-muted small text-uppercase mb-3">Missing Optional</h6>
+                            {% if missing_optional %}
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for skill in missing_optional %}
+                                        <span class="badge bg-light text-muted border border-secondary border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                            {{ skill }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small">None</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

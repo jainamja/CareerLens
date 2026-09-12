@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{% url 'jobs:list' %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted">
+                    <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                </a>
+                <h1 class="h4 fw-bold mb-0">Job Details</h1>
+                
+                <div class="ms-auto d-flex flex-wrap gap-2 justify-content-md-end">
+                    {% if job.applications.all %}
+                        {% with app=job.applications.first %}
+                            <a href="{% url 'applications:detail' app.pk %}" class="btn btn-outline-primary d-flex align-items-center gap-2">
+                                <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                                View Application
+                            </a>
+                        {% endwith %}
+                    {% else %}
+                        <a href="{% url 'applications:create' %}?job={{ job.pk }}" class="btn btn-success d-flex align-items-center gap-2">
+                            <i data-lucide="briefcase" style="width: 16px; height: 16px;"></i>
+                            Track Application
+                        </a>
+                    {% endif %}
+                    
+                    <a href="{% url 'matching:select_resume' job.pk %}" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i>
+                        Analyze Match
+                    </a>
+                    <a href="{% url 'jobs:edit' job.pk %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                        <i data-lucide="edit" style="width: 16px; height: 16px;"></i>
+                        Edit
+                    </a>
+                    <a href="{% url 'jobs:delete' job.pk %}" class="btn btn-outline-danger d-flex align-items-center gap-2">
+                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                        Delete
+                    </a>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="mb-4">
+                        <h2 class="fw-bold text-dark mb-1">{{ job.title }}</h2>
+                        <h4 class="text-muted fw-normal mb-3 d-flex align-items-center gap-2">
+                            <i data-lucide="building-2" style="width: 20px; height: 20px;"></i>
+                            {{ job.company }}
+                        </h4>
+                        
+                        <div class="d-flex flex-wrap gap-4 text-muted small mt-4">
+                            {% if job.location %}
+                            <div class="d-flex align-items-center gap-1">
+                                <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
+                                <span>{{ job.location }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            {% if job.salary %}
+                            <div class="d-flex align-items-center gap-1">
+                                <i data-lucide="banknote" style="width: 16px; height: 16px;"></i>
+                                <span>{{ job.salary }}</span>
+                            </div>
+                            {% endif %}
+                            
+                            <div class="d-flex align-items-center gap-1">
+                                <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
+                                <span>Added {{ job.created_at|date:"M j, Y" }}</span>
+                            </div>
+                            
+                            {% if job.job_url %}
+                            <div class="d-flex align-items-center gap-1">
+                                <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                                <a href="{{ job.job_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">View Original Posting</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h5 class="fw-bold mb-3">Job Description</h5>
+                    <div class="text-secondary" style="white-space: pre-line; line-height: 1.6;">
+                        {{ job.description }}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
+                        <i data-lucide="award" class="text-primary" style="width: 24px; height: 24px;"></i>
+                        Skills
+                    </h4>
+                    
+                    {% if not required_skills and not optional_skills %}
+                        <div class="text-center py-4 text-muted bg-light rounded" style="border: 1px dashed #dee2e6;">
+                            <i data-lucide="tags" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
+                            <p class="mb-0">No skills specified for this job.</p>
+                            <a href="{% url 'jobs:edit' job.pk %}" class="btn btn-sm btn-outline-primary mt-3">Add Skills</a>
+                        </div>
+                    {% else %}
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-uppercase text-muted small mb-3">Required Skills</h6>
+                            {% if required_skills %}
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for js in required_skills %}
+                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                            {{ js.skill.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small">None specified.</p>
+                            {% endif %}
+                        </div>
+                        
+                        <div>
+                            <h6 class="fw-bold text-uppercase text-muted small mb-3">Optional Skills</h6>
+                            {% if optional_skills %}
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for js in optional_skills %}
+                                        <span class="badge bg-light text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                            {{ js.skill.name }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted small">None specified.</p>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

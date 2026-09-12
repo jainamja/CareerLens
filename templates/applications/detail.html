@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}Application: {{ application.job.title }} - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex align-items-center mb-4">
+        <a href="{% url 'applications:list' %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted">
+            <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+        </a>
+        <h1 class="h3 fw-bold mb-0">Application Details</h1>
+        
+        <div class="ms-auto d-flex gap-2">
+            <a href="{% url 'applications:edit' application.pk %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
+                <i data-lucide="edit" style="width: 16px; height: 16px;"></i>
+                Edit
+            </a>
+            <a href="{% url 'applications:delete' application.pk %}" class="btn btn-outline-danger d-flex align-items-center gap-2">
+                <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
+                Delete
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 pb-4 border-bottom">
+                        <div>
+                            <h2 class="h4 fw-bold mb-1">{{ application.job.title }}</h2>
+                            <p class="text-secondary mb-0 d-flex align-items-center gap-2">
+                                <i data-lucide="building-2" style="width: 16px; height: 16px;"></i>
+                                {{ application.job.company }}
+                                {% if application.job.location %}
+                                    <span class="mx-1">•</span>
+                                    <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
+                                    {{ application.job.location }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        <div>
+                            {% include "applications/_status_badge.html" with status=application.status label=application.get_status_display %}
+                        </div>
+                    </div>
+
+                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2 text-dark">
+                        <i data-lucide="align-left" class="text-muted" style="width: 20px; height: 20px;"></i>
+                        Notes
+                    </h5>
+                    {% if application.notes %}
+                        <div class="bg-light p-4 rounded-3 text-secondary" style="white-space: pre-wrap; font-size: 0.95rem;">{{ application.notes }}</div>
+                    {% else %}
+                        <p class="text-muted fst-italic">No notes added.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body p-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="fw-bold mb-1">Job Details</h6>
+                        <p class="text-muted small mb-0">View the original job posting and requirements.</p>
+                    </div>
+                    <a href="{% url 'jobs:detail' application.job.pk %}" class="btn btn-primary d-flex align-items-center gap-2">
+                        <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                        View Job
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 bg-light" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold text-uppercase text-muted small mb-4">Application Info</h6>
+                    
+                    <div class="mb-4">
+                        <p class="text-muted small mb-1 d-flex align-items-center gap-2">
+                            <i data-lucide="calendar" style="width: 14px; height: 14px;"></i>
+                            Applied Date
+                        </p>
+                        <p class="fw-medium mb-0">{% if application.applied_date %}{{ application.applied_date|date:"F j, Y" }}{% else %}Not specified{% endif %}</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-muted small mb-1 d-flex align-items-center gap-2">
+                            <i data-lucide="clock" style="width: 14px; height: 14px;"></i>
+                            Last Updated
+                        </p>
+                        <p class="fw-medium mb-0">{{ application.updated_at|date:"F j, Y" }}</p>
+                    </div>
+                    
+                    <div>
+                        <p class="text-muted small mb-1 d-flex align-items-center gap-2">
+                            <i data-lucide="file-plus" style="width: 14px; height: 14px;"></i>
+                            Created
+                        </p>
+                        <p class="fw-medium mb-0">{{ application.created_at|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

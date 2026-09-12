@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{% url 'jobs:list' %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted">
+                    <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                </a>
+                <h1 class="h3 fw-bold mb-0">{{ title }}</h1>
+            </div>
+
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body p-4">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.title.id_for_label }}" class="form-label fw-bold">Job Title *</label>
+                                {{ form.title }}
+                                {% if form.title.errors %}
+                                    <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.company.id_for_label }}" class="form-label fw-bold">Company *</label>
+                                {{ form.company }}
+                                {% if form.company.errors %}
+                                    <div class="text-danger small mt-1">{{ form.company.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.location.id_for_label }}" class="form-label fw-bold">Location</label>
+                                {{ form.location }}
+                                {% if form.location.errors %}
+                                    <div class="text-danger small mt-1">{{ form.location.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <label for="{{ form.salary.id_for_label }}" class="form-label fw-bold">Salary</label>
+                                {{ form.salary }}
+                                {% if form.salary.errors %}
+                                    <div class="text-danger small mt-1">{{ form.salary.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.job_url.id_for_label }}" class="form-label fw-bold">Job URL</label>
+                                {{ form.job_url }}
+                                {% if form.job_url.errors %}
+                                    <div class="text-danger small mt-1">{{ form.job_url.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-12">
+                                <label for="{{ form.description.id_for_label }}" class="form-label fw-bold">Description *</label>
+                                {{ form.description }}
+                                {% if form.description.errors %}
+                                    <div class="text-danger small mt-1">{{ form.description.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+                        <h5 class="fw-bold mb-3">Skills</h5>
+                        <p class="text-muted small mb-3">Select the skills required or nice-to-have for this position. This helps with matching your resume later.</p>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.required_skills.id_for_label }}" class="form-label fw-bold">Required Skills</label>
+                                {{ form.required_skills }}
+                                {% if form.required_skills.help_text %}
+                                    <div class="form-text">{{ form.required_skills.help_text }}</div>
+                                {% endif %}
+                                {% if form.required_skills.errors %}
+                                    <div class="text-danger small mt-1">{{ form.required_skills.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.optional_skills.id_for_label }}" class="form-label fw-bold">Optional Skills</label>
+                                {{ form.optional_skills }}
+                                {% if form.optional_skills.help_text %}
+                                    <div class="form-text">{{ form.optional_skills.help_text }}</div>
+                                {% endif %}
+                                {% if form.optional_skills.errors %}
+                                    <div class="text-danger small mt-1">{{ form.optional_skills.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                            <a href="{% if job %}{% url 'jobs:detail' job.pk %}{% else %}{% url 'jobs:list' %}{% endif %}" class="btn btn-light">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Save Job</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Select2 CSS and JS for better multi-select -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        min-height: 38px;
+    }
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+</style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2').select2({
+            width: '100%',
+            placeholder: "Select skills..."
+        });
+    });
+</script>
+{% endblock %}

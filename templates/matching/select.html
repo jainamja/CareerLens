@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Analyze Match - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="d-flex align-items-center mb-4">
+                <a href="{% url 'jobs:detail' job.pk %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted">
+                    <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+                </a>
+                <h1 class="h4 fw-bold mb-0">Select Resume</h1>
+            </div>
+
+            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+                <div class="card-body p-4 p-md-5">
+                    <div class="mb-4">
+                        <p class="text-muted">Analyze match against job:</p>
+                        <h4 class="fw-bold">{{ job.title }}</h4>
+                        <p class="text-secondary small d-flex align-items-center gap-1 mb-0">
+                            <i data-lucide="building-2" style="width: 14px; height: 14px;"></i>
+                            {{ job.company }}
+                        </p>
+                    </div>
+                    
+                    <hr class="my-4">
+
+                    {% if resumes %}
+                        <form method="post" action="{% url 'matching:select_resume' job.pk %}">
+                            {% csrf_token %}
+                            <p class="fw-bold mb-3">Choose a processed resume:</p>
+                            
+                            <div class="list-group mb-4">
+                                {% for resume in resumes %}
+                                <label class="list-group-item list-group-item-action d-flex align-items-center gap-3 p-3" style="cursor: pointer;">
+                                    <input class="form-check-input flex-shrink-0" type="radio" name="resume_id" id="resume_{{ resume.id }}" value="{{ resume.id }}" {% if forloop.first %}checked{% endif %} style="font-size: 1.2rem;">
+                                    <div class="w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="mb-1 fw-bold">{{ resume.original_filename }}</h6>
+                                            <small class="text-muted">{{ resume.uploaded_at|date:"M j, Y" }}</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2 small text-muted">
+                                            <i data-lucide="check-circle" class="text-success" style="width: 14px; height: 14px;"></i>
+                                            <span>Processed and ready</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2 d-flex justify-content-center align-items-center gap-2">
+                                <i data-lucide="bar-chart-2" style="width: 18px; height: 18px;"></i>
+                                Analyze Match
+                            </button>
+                        </form>
+                    {% else %}
+                        <div class="text-center py-4 bg-light rounded" style="border: 1px dashed #dee2e6;">
+                            <i data-lucide="file-x-2" class="text-muted mb-3" style="width: 40px; height: 40px;"></i>
+                            <h6 class="fw-bold">No Processed Resumes</h6>
+                            <p class="text-muted small mb-4">You need to upload and process a resume first.</p>
+                            <a href="{% url 'resumes:list' %}" class="btn btn-primary">Go to Resumes</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

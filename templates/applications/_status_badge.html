@@ -1,0 +1,29 @@
+{% if status == 'saved' %}
+    <span class="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25 rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% elif status == 'applied' %}
+    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% elif status == 'assessment' %}
+    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% elif status == 'interview' %}
+    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% elif status == 'offer' %}
+    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% elif status == 'rejected' %}
+    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% else %}
+    <span class="badge bg-light text-dark border rounded-pill px-2 py-1 fw-medium">
+        {{ label }}
+    </span>
+{% endif %}

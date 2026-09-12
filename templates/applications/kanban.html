@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Applications Kanban - CareerLens{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+        <div>
+            <h1 class="h3 fw-bold mb-1">Applications Board</h1>
+            <p class="text-muted mb-0">Track your job applications and keep your search organized.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="btn-group" role="group">
+                <a href="{% url 'applications:list' %}" class="btn btn-outline-secondary d-flex align-items-center gap-2" title="List View">
+                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
+                    List
+                </a>
+                <a href="{% url 'applications:kanban' %}" class="btn btn-primary d-flex align-items-center gap-2" title="Kanban View">
+                    <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i>
+                    Kanban
+                </a>
+            </div>
+            <a href="{% url 'applications:create' %}" class="btn btn-primary d-flex align-items-center gap-2 ms-2">
+                <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
+                Add Application
+            </a>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="card shadow-sm border-0 mb-4 bg-light" style="border-radius: 12px; max-width: 500px;">
+        <div class="card-body p-2">
+            <form method="get" class="d-flex align-items-center">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0 border-0">
+                        <i data-lucide="search" style="width: 16px; height: 16px; opacity: 0.5;"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control border-0 bg-transparent ps-0 shadow-none" placeholder="Search applications..." value="{{ search_query|default:'' }}">
+                </div>
+                <button type="submit" class="btn btn-sm btn-secondary ms-2">Search</button>
+                {% if search_query %}
+                    <a href="{% url 'applications:kanban' %}" class="btn btn-sm btn-link text-muted ms-1">Clear</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+
+    <!-- Kanban Board -->
+    <div class="d-flex overflow-auto gap-4 pb-4" style="min-height: 60vh; snap-type: x mandatory;">
+        {% for col in columns %}
+            <div class="d-flex flex-column" style="min-width: 300px; max-width: 300px; scroll-snap-align: start;">
+                <div class="d-flex align-items-center justify-content-between mb-3 px-1">
+                    <h6 class="fw-bold text-uppercase text-muted mb-0 d-flex align-items-center gap-2">
+                        {{ col.label }}
+                        <span class="badge bg-secondary bg-opacity-25 text-secondary rounded-pill">{{ col.apps|length }}</span>
+                    </h6>
+                </div>
+                
+                <div class="d-flex flex-column gap-3 bg-light p-2 rounded-3" style="min-height: 150px;">
+                    {% for app in col.apps %}
+                        <div class="card shadow-sm border-0 cursor-pointer" style="border-radius: 8px;">
+                            <div class="card-body p-3">
+                                <h6 class="fw-bold mb-1 text-truncate" title="{{ app.job.title }}">{{ app.job.title }}</h6>
+                                <p class="text-secondary small mb-2 d-flex align-items-center gap-1 text-truncate" title="{{ app.job.company }}">
+                                    <i data-lucide="building-2" style="width: 12px; height: 12px;"></i>
+                                    {{ app.job.company }}
+                                </p>
+                                
+                                {% if app.job.location %}
+                                    <p class="text-muted small mb-2 text-truncate">
+                                        <i data-lucide="map-pin" style="width: 12px; height: 12px;" class="me-1"></i>
+                                        {{ app.job.location }}
+                                    </p>
+                                {% endif %}
+                                
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                                    <span class="text-muted" style="font-size: 0.75rem;">
+                                        {% if app.applied_date %}
+                                            Applied: {{ app.applied_date|date:"M j" }}
+                                        {% else %}
+                                            Updated: {{ app.updated_at|date:"M j" }}
+                                        {% endif %}
+                                    </span>
+                                    <a href="{% url 'applications:detail' app.pk %}" class="btn btn-sm btn-light py-0 px-2 text-primary">
+                                        View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="text-center py-4 text-muted" style="border: 1px dashed #dee2e6; border-radius: 8px;">
+                            <span style="font-size: 0.85rem;">No applications</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
