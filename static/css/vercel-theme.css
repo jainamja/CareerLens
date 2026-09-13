@@ -1,0 +1,91 @@
+/* -------------------------------------------------------------
+   "Apple/Vercel" Glassmorphism UI Overrides
+   ------------------------------------------------------------- */
+
+/* 1. The Ambient Gradient Background */
+body {
+    background-color: #fafafa !important;
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.1) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.05) 0px, transparent 50%) !important;
+    background-attachment: fixed !important;
+    background-size: cover !important;
+}
+
+#main-content {
+    background-color: transparent !important;
+}
+
+/* 2. Frosted Glass Sidebar */
+#sidebar {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 3. Glassy Page Header */
+.page-header {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+/* 4. Glassmorphism Bento Cards */
+.bento-card, .bento-card-no-hover, .card {
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.bento-card:hover {
+    background: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 12px 32px rgba(139, 92, 246, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+    transform: translateY(-3px) scale(1.01) !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+
+/* 5. Inputs & Forms */
+.form-control-modern, .form-control, .form-select {
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.2s ease !important;
+}
+
+.form-control-modern:focus, .form-control:focus, .form-select:focus {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(139, 92, 246, 0.5) !important;
+    box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1) !important;
+}
+
+/* 6. Buttons */
+.btn-primary, .btn-modern {
+    background: linear-gradient(135deg, #0F172A 0%, #334155 100%) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2) !important;
+}
+.btn-primary:hover, .btn-modern:hover {
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.3) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* 7. Sub-elements / Nested Cards */
+.bg-light {
+    background-color: rgba(255, 255, 255, 0.4) !important;
+}
+.bg-white {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* 8. Text selection for that extra polish */
+::selection {
+    background-color: rgba(139, 92, 246, 0.3);
+    color: #0F172A;
+}
