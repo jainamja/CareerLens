@@ -89,3 +89,75 @@ body {
     background-color: rgba(139, 92, 246, 0.3);
     color: #0F172A;
 }
+
+/* -------------------------------------------------------------
+   "Full Animation" Engine
+   ------------------------------------------------------------- */
+
+/* 1. Animated Ambient Background */
+@keyframes ambientShift {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+body {
+    background-size: 200% 200% !important;
+    animation: ambientShift 30s ease infinite;
+}
+
+/* 2. HTMX Page Transition Animations */
+#main-content {
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+body.htmx-request #main-content {
+    opacity: 0.5;
+    transform: scale(0.99);
+}
+
+/* 3. Pop-in Entrance Animation for Cards (Staggered) */
+@keyframes popIn {
+    0% { opacity: 0; transform: translateY(20px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.bento-card, .card {
+    animation: popIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* CSS pseudo-selector magic to automatically stagger the load of grid items */
+.row > div:nth-child(1) .bento-card { animation-delay: 0.05s; }
+.row > div:nth-child(2) .bento-card { animation-delay: 0.10s; }
+.row > div:nth-child(3) .bento-card { animation-delay: 0.15s; }
+.row > div:nth-child(4) .bento-card { animation-delay: 0.20s; }
+.row > div:nth-child(5) .bento-card { animation-delay: 0.25s; }
+.row > div:nth-child(6) .bento-card { animation-delay: 0.30s; }
+.row > div:nth-child(7) .bento-card { animation-delay: 0.35s; }
+.row > div:nth-child(8) .bento-card { animation-delay: 0.40s; }
+
+/* 4. Button Click / Hover Animations */
+.btn-modern, .btn-primary {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
+}
+.btn-modern:active, .btn-primary:active {
+    transform: scale(0.95) !important;
+}
+
+/* 5. Sidebar Link Animations */
+.sidebar-nav-link {
+    transition: all 0.2s ease, padding-left 0.2s ease !important;
+}
+.sidebar-nav-link:hover {
+    padding-left: 1.25rem !important;
+}
+
+/* 6. Dashboard Stat Numbers count-up illusion */
+@keyframes slideUpFade {
+    0% { opacity: 0; transform: translateY(15px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+h2.display-3, .display-4, .display-5, h3.fw-bold {
+    animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: 0.2s;
+}
