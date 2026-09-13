@@ -503,3 +503,41 @@ body {
   border-bottom: 1px solid var(--cl-border-color) !important;
 }
 
+
+/* Collapsed Sidebar State */
+body.sidebar-collapsed #sidebar {
+    width: 80px;
+}
+body.sidebar-collapsed #main-content {
+    margin-left: 80px;
+}
+body.sidebar-collapsed .sidebar-brand-text,
+body.sidebar-collapsed .sidebar-nav-link span,
+body.sidebar-collapsed .sidebar-footer .user-profile-menu .user-info {
+    display: none !important;
+}
+body.sidebar-collapsed .sidebar-nav-link {
+    justify-content: center;
+    padding: 0.85rem 0;
+}
+body.sidebar-collapsed .sidebar-nav-link i {
+    margin-right: 0;
+    font-size: 1.3rem;
+}
+body.sidebar-collapsed .sidebar-brand {
+    justify-content: center;
+    padding: 1.5rem 0;
+}
+body.sidebar-collapsed .sidebar-brand i {
+    margin-right: 0;
+}
+body.sidebar-collapsed .user-profile-menu {
+    justify-content: center;
+}
+body.sidebar-collapsed #sidebar-desktop-toggle {
+    transform: rotate(180deg);
+}
+#sidebar-desktop-toggle {
+    transition: transform 0.3s ease;
+}
+
