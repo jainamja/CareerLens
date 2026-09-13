@@ -28,7 +28,7 @@
     </div>
 
     <!-- Search Form -->
-    <div class="card shadow-sm border-0 mb-4 bg-light" style="border-radius: 12px; max-width: 500px;">
+    <div class="bento-card mb-4" style="max-width: 500px;">
         <div class="card-body p-2">
             <form method="get" class="d-flex align-items-center">
                 <div class="input-group">
@@ -58,7 +58,7 @@
                 
                 <div class="d-flex flex-column gap-3 bg-light p-2 rounded-3" style="min-height: 150px;">
                     {% for app in col.apps %}
-                        <div class="card shadow-sm border-0 cursor-pointer" style="border-radius: 8px;">
+                        <div class="bento-card cursor-pointer">
                             <div class="card-body p-3">
                                 <h6 class="fw-bold mb-1 text-truncate" title="{{ app.job.title }}">{{ app.job.title }}</h6>
                                 <p class="text-secondary small mb-2 d-flex align-items-center gap-1 text-truncate" title="{{ app.job.company }}">

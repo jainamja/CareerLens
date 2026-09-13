@@ -26,7 +26,7 @@
     <div class="row g-4 mb-5">
         <div class="col-md-6 col-lg-3">
             <a href="{% url 'resumes:list' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="bento-card h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <h6 class="text-muted fw-bold text-uppercase small mb-0">Resumes</h6>
@@ -46,7 +46,7 @@
         
         <div class="col-md-6 col-lg-3">
             <a href="{% url 'jobs:list' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="bento-card h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <h6 class="text-muted fw-bold text-uppercase small mb-0">Tracked Jobs</h6>
@@ -65,7 +65,7 @@
         
         <div class="col-md-6 col-lg-3">
             <a href="{% url 'applications:list' %}" class="text-decoration-none">
-                <div class="card shadow-sm border-0 h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                <div class="bento-card h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
                     <div class="card-body p-4">
                         <div class="d-flex justify-content-between align-items-start mb-3">
                             <h6 class="text-muted fw-bold text-uppercase small mb-0">Applications</h6>
@@ -83,7 +83,7 @@
         </div>
         
         <div class="col-md-6 col-lg-3">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100" style="border-radius: 12px;">
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between align-items-start mb-3">
                         <h6 class="text-muted fw-bold text-uppercase small mb-0">Matches</h6>
@@ -105,7 +105,7 @@
     </div>
 
     <!-- Application Pipeline -->
-    <div class="card shadow-sm border-0 mb-5" style="border-radius: 12px;">
+    <div class="bento-card mb-5" style="border-radius: 12px;">
         <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
             <h5 class="fw-bold mb-0">Application Pipeline</h5>
             <a href="{% url 'applications:kanban' %}" class="btn btn-sm btn-link text-decoration-none">View Kanban &rarr;</a>
@@ -131,7 +131,7 @@
         <!-- Main Content Area -->
         <div class="col-lg-8">
             <!-- Recent Applications -->
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+            <div class="bento-card mb-4" style="border-radius: 12px;">
                 <div class="card-header bg-white pt-4 px-4 pb-2 border-bottom-0 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0">Recent Applications</h5>
                     <a href="{% url 'applications:list' %}" class="btn btn-sm btn-link text-decoration-none">View all &rarr;</a>
@@ -166,7 +166,7 @@
             </div>
 
             <!-- Recent Matches -->
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+            <div class="bento-card mb-4" style="border-radius: 12px;">
                 <div class="card-header bg-white pt-4 px-4 pb-2 border-bottom-0 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0">Recent Matches</h5>
                 </div>
@@ -205,7 +205,7 @@
             </div>
             
             <!-- Recent Jobs -->
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+            <div class="bento-card mb-4" style="border-radius: 12px;">
                 <div class="card-header bg-white pt-4 px-4 pb-2 border-bottom-0 d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0">Recent Jobs</h5>
                     <a href="{% url 'jobs:list' %}" class="btn btn-sm btn-link text-decoration-none">View all &rarr;</a>
@@ -236,7 +236,7 @@
         <!-- Sidebar Area -->
         <div class="col-lg-4">
             <!-- Skill Overview -->
-            <div class="card shadow-sm border-0 mb-4 bg-primary bg-opacity-10" style="border-radius: 12px;">
+            <div class="bento-card mb-4 bg-primary bg-opacity-10" style="border-radius: 12px;">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-4 text-primary d-flex align-items-center gap-2">
                         <i data-lucide="award" style="width: 20px; height: 20px;"></i>
@@ -266,7 +266,7 @@
             </div>
             
             <!-- Missing Skills -->
-            <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+            <div class="bento-card mb-4" style="border-radius: 12px;">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
                         <i data-lucide="target" class="text-danger" style="width: 20px; height: 20px;"></i>
@@ -290,7 +290,7 @@
             </div>
 
             <!-- Recent Activity -->
-            <div class="card shadow-sm border-0" style="border-radius: 12px;">
+            <div class="bento-card" style="border-radius: 12px;">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
                         <i data-lucide="activity" class="text-secondary" style="width: 20px; height: 20px;"></i>
