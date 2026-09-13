@@ -19,7 +19,7 @@
     
     <div class="row g-4 mb-5">
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4 text-center">
                     <h6 class="text-muted fw-bold text-uppercase small mb-3">Total Applications</h6>
                     <h2 class="display-5 fw-bold text-dark mb-0">{{ total_apps }}</h2>
@@ -28,7 +28,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4 text-center">
                     <h6 class="text-muted fw-bold text-uppercase small mb-3">Active Pipeline</h6>
                     <h2 class="display-5 fw-bold text-primary mb-0">{{ active_apps }}</h2>
@@ -37,7 +37,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4 text-center">
                     <h6 class="text-muted fw-bold text-uppercase small mb-3">Interview Rate</h6>
                     <h2 class="display-5 fw-bold text-warning mb-0">{{ interview_rate|floatformat:"1" }}%</h2>
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4 text-center">
                     <h6 class="text-muted fw-bold text-uppercase small mb-3">Offer Rate</h6>
                     <h2 class="display-5 fw-bold text-success mb-0">{{ offer_rate|floatformat:"1" }}%</h2>
@@ -57,7 +57,7 @@
     </div>
 
     <!-- Application Status Distribution -->
-    <div class="card shadow-sm border-0 mb-5" style="border-radius: 12px;">
+    <div class="bento-card mb-5">
         <div class="card-body p-4">
             <h6 class="fw-bold mb-4">Application Status Distribution</h6>
             {% if has_apps %}
@@ -89,7 +89,7 @@
     
     <div class="row g-4 mb-5">
         <div class="col-md-6">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-4">Match Scores Overview</h6>
                     {% if has_matches %}
@@ -129,7 +129,7 @@
         </div>
         
         <div class="col-md-6">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-4">Skill Coverage Distribution</h6>
                     {% if has_matches %}
@@ -161,7 +161,7 @@
     
     <div class="row g-4 mb-4">
         <div class="col-md-5">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4 text-center d-flex flex-column justify-content-center">
                     <h6 class="text-muted fw-bold text-uppercase small mb-3">Total Tracked Jobs</h6>
                     <h2 class="display-3 fw-bold text-dark mb-0">{{ total_jobs }}</h2>
@@ -174,7 +174,7 @@
         </div>
         
         <div class="col-md-7">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 12px;">
+            <div class="bento-card h-100">
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-4">Most Common Required Skills</h6>
                     {% if common_job_skills %}

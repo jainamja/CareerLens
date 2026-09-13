@@ -14,7 +14,7 @@
     <div class="row g-4">
         <div class="col-12 col-lg-4">
             <!-- Sidebar Info -->
-            <div class="card shadow-sm border-0 bg-white mb-4" style="border-radius: 12px;">
+            <div class="bento-card bg-white mb-4">
                 <div class="card-body p-4">
                     <h5 class="fw-bold mb-3 fs-6">Resume Details</h5>
                     
@@ -75,7 +75,7 @@
             {% endif %}
 
             {% if resume.is_processed and not resume.processing_error %}
-            <div class="card shadow-sm border-0 bg-white mb-4" style="border-radius: 12px;">
+            <div class="bento-card bg-white mb-4">
                 <div class="card-header bg-transparent border-bottom-0 p-4 pb-0">
                     <h5 class="fw-bold fs-6 mb-0">Detected Skills</h5>
                 </div>
@@ -106,7 +106,7 @@
             </div>
             {% endif %}
 
-            <div class="card shadow-sm border-0 bg-white mb-4" style="border-radius: 12px;">
+            <div class="bento-card bg-white mb-4">
                 <div class="card-header bg-transparent border-bottom-0 p-4 pb-0">
                     <h5 class="fw-bold fs-6 mb-0">Extracted Resume Text</h5>
                 </div>

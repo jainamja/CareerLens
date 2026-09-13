@@ -18,7 +18,7 @@
     </div>
 
     <!-- Filters and Search -->
-    <div class="card shadow-sm border-0 mb-4" style="border-radius: 12px;">
+    <div class="bento-card mb-4">
         <div class="card-body bg-light rounded" style="border-radius: 12px;">
             <form method="get" action="{% url 'jobs:list' %}" class="row g-3 align-items-end">
                 <div class="col-md-4">
@@ -132,7 +132,7 @@
         
     {% else %}
         <!-- Empty State -->
-        <div class="card shadow-sm border-0 bg-white text-center py-5" style="border-radius: 12px;">
+        <div class="bento-card bg-white text-center py-5">
             <div class="card-body">
                 <div class="text-muted mb-3">
                     <i data-lucide="briefcase" style="width: 64px; height: 64px; opacity: 0.5;"></i>
