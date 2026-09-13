@@ -324,3 +324,65 @@ body.sidebar-collapsed #sidebar:not(:hover) .sidebar-footer .user-profile-menu .
     padding: 0 !important;
     margin: 0 !important;
 }
+
+/* -------------------------------------------------------------
+   Universal Sidebar Alignment (Anti-Jitter)
+   ------------------------------------------------------------- */
+/* We lock the left padding of ALL sidebar items to exactly 1.5rem (24px) 
+   so the icons never shift horizontally when collapsing/expanding. */
+
+#sidebar .sidebar-brand {
+    justify-content: flex-start !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+}
+
+#sidebar .sidebar-nav {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+#sidebar .sidebar-nav-link {
+    justify-content: flex-start !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    margin: 0 0.5rem !important; /* give the pill some edge spacing instead */
+}
+
+#sidebar .sidebar-footer {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+#sidebar .user-profile-menu {
+    justify-content: flex-start !important;
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+    margin: 0 0.5rem !important;
+}
+
+/* Ensure collapsed state doesn't try to "center" and cause sideways shifting */
+body.sidebar-collapsed #sidebar .sidebar-header-wrapper,
+body.sidebar-collapsed #sidebar .sidebar-brand,
+body.sidebar-collapsed #sidebar .sidebar-nav-link,
+body.sidebar-collapsed #sidebar .user-profile-menu {
+    justify-content: flex-start !important;
+}
+
+/* Fix width of collapsed items to prevent overflow */
+body.sidebar-collapsed #sidebar:not(:hover) .sidebar-nav-link,
+body.sidebar-collapsed #sidebar:not(:hover) .user-profile-menu {
+    width: 60px !important;
+    padding-left: 1.1rem !important; /* Micro-adjustment to perfectly center in 80px */
+}
+body.sidebar-collapsed #sidebar:not(:hover) .sidebar-brand {
+    padding-left: 1.6rem !important;
+}
+
+/* Restore exact padding when expanded to prevent jitter */
+body.sidebar-collapsed #sidebar:hover .sidebar-nav-link,
+body.sidebar-collapsed #sidebar:hover .user-profile-menu {
+    width: auto !important;
+    padding-left: 1.5rem !important;
+}
+body.sidebar-collapsed #sidebar:hover .sidebar-brand {
+    padding-left: 1.5rem !important;
+}
