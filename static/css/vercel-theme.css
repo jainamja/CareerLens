@@ -161,3 +161,33 @@ h2.display-3, .display-4, .display-5, h3.fw-bold {
     animation: slideUpFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: 0.2s;
 }
+
+/* -------------------------------------------------------------
+   Sidebar Collapsed Alignment Fixes
+   ------------------------------------------------------------- */
+
+/* Fix Brand Alignment */
+body.sidebar-collapsed .sidebar-header-wrapper {
+    justify-content: center !important;
+    padding-right: 0 !important;
+}
+body.sidebar-collapsed .sidebar-brand {
+    padding-left: 0 !important;
+}
+
+/* Fix Avatar Alignment & Hide Caret */
+body.sidebar-collapsed .dropdown-toggle::after {
+    display: none !important;
+}
+body.sidebar-collapsed .user-profile-menu {
+    padding: 0 !important;
+    height: 48px; /* match the width/height to make a perfect circle container */
+    display: flex;
+    align-items: center;
+    justify-content: center !important;
+}
+body.sidebar-collapsed .sidebar-footer {
+    padding: 1rem 0 !important; /* remove horizontal padding to center exactly */
+    display: flex;
+    justify-content: center;
+}
