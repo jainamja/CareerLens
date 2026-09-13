@@ -19,10 +19,13 @@
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- HTMX (For instant SPA-like page routing) -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body hx-boost="true">
 
     {% if messages %}
         <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050">
@@ -122,6 +125,11 @@
                 sidebar.classList.toggle('show');
             });
         }
+        
+        // Re-initialize Lucide icons after HTMX swaps DOM
+        document.body.addEventListener('htmx:afterSwap', function() {
+            lucide.createIcons();
+        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>
