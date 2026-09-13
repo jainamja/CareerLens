@@ -131,19 +131,37 @@
             });
         }
         
-        // Desktop Sidebar Toggle
+        // Desktop Sidebar Toggle & Auto-Collapse
         const desktopToggle = document.getElementById('sidebar-desktop-toggle');
         const body = document.body;
         
-        // Load preference
-        if (localStorage.getItem('sidebar-collapsed') === 'true') {
-            body.classList.add('sidebar-collapsed');
+        function handleAutoCollapse() {
+            if (window.innerWidth < 1200 && window.innerWidth >= 992) {
+                // Auto collapse on tablet/small desktop
+                body.classList.add('sidebar-collapsed');
+            } else if (window.innerWidth >= 1200) {
+                // Restore preference on large desktop
+                if (localStorage.getItem('sidebar-collapsed') !== 'true') {
+                    body.classList.remove('sidebar-collapsed');
+                } else {
+                    body.classList.add('sidebar-collapsed');
+                }
+            }
         }
+        
+        // Initial check
+        handleAutoCollapse();
+        
+        // Listen for resize
+        window.addEventListener('resize', handleAutoCollapse);
         
         if (desktopToggle) {
             desktopToggle.addEventListener('click', () => {
                 body.classList.toggle('sidebar-collapsed');
-                localStorage.setItem('sidebar-collapsed', body.classList.contains('sidebar-collapsed'));
+                if (window.innerWidth >= 1200) {
+                    // Only save manual preference on large screens
+                    localStorage.setItem('sidebar-collapsed', body.classList.contains('sidebar-collapsed'));
+                }
             });
         }
         
