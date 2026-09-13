@@ -191,3 +191,75 @@ body.sidebar-collapsed .sidebar-footer {
     display: flex;
     justify-content: center;
 }
+
+/* -------------------------------------------------------------
+   Hover-to-Expand Sidebar Logistics
+   ------------------------------------------------------------- */
+@media (min-width: 992px) {
+    /* Smooth width transition */
+    #sidebar {
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s ease, background-color 0.3s ease !important;
+        overflow-x: hidden;
+        white-space: nowrap;
+    }
+
+    /* When hovered while collapsed */
+    body.sidebar-collapsed #sidebar:hover {
+        width: 260px !important;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.08) !important;
+        background-color: rgba(255, 255, 255, 0.75) !important; /* Slightly more opaque when open */
+    }
+    
+    /* Keep main content at 80px to prevent jitter */
+    body.sidebar-collapsed #main-content {
+        margin-left: 80px !important;
+    }
+
+    /* Restore text visibility */
+    @keyframes fadeInText {
+        0% { opacity: 0; }
+        50% { opacity: 0; } /* Delay appearance slightly until sidebar widens */
+        100% { opacity: 1; }
+    }
+
+    body.sidebar-collapsed #sidebar:hover .sidebar-brand-text,
+    body.sidebar-collapsed #sidebar:hover .sidebar-nav-link span {
+        display: inline-block !important;
+        animation: fadeInText 0.4s forwards;
+    }
+
+    body.sidebar-collapsed #sidebar:hover .sidebar-footer .user-profile-menu .user-info {
+        display: flex !important;
+        flex-direction: column !important;
+        animation: fadeInText 0.4s forwards;
+    }
+
+    /* Restore Original Alignments */
+    body.sidebar-collapsed #sidebar:hover .sidebar-header-wrapper {
+        justify-content: space-between !important;
+        padding-right: 1rem !important;
+    }
+    
+    body.sidebar-collapsed #sidebar:hover .sidebar-nav-link {
+        justify-content: flex-start !important;
+        padding: 0.75rem 1rem !important;
+    }
+    
+    body.sidebar-collapsed #sidebar:hover .sidebar-nav-link svg {
+        margin-right: 0.75rem !important;
+    }
+    
+    body.sidebar-collapsed #sidebar:hover .sidebar-brand {
+        justify-content: flex-start !important;
+        padding-left: 0 !important;
+    }
+    
+    body.sidebar-collapsed #sidebar:hover .dropdown-toggle::after {
+        display: inline-block !important;
+    }
+    
+    body.sidebar-collapsed #sidebar:hover .user-profile-menu {
+        justify-content: flex-start !important;
+        padding: 0.5rem !important;
+    }
+}
