@@ -127,64 +127,63 @@
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        lucide.createIcons();
-        
-        // Mobile Sidebar Toggle
-        const sidebarToggle = document.getElementById('sidebar-toggle');
-        const sidebar = document.getElementById('sidebar');
-        if (sidebarToggle && sidebar) {
-            sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('show');
+        (function() {
+            lucide.createIcons();
+            
+            // Re-bind click events using delegation on the document body to survive HTMX swaps
+            document.body.addEventListener('click', function(e) {
+                // Mobile Sidebar Toggle
+                const mobileBtn = e.target.closest('#sidebar-toggle');
+                if (mobileBtn) {
+                    const sidebar = document.getElementById('sidebar');
+                    if (sidebar) sidebar.classList.toggle('show');
+                }
+                
+                // Desktop Sidebar Toggle
+                const desktopBtn = e.target.closest('#sidebar-desktop-toggle');
+                if (desktopBtn) {
+                    document.body.classList.toggle('sidebar-collapsed');
+                    if (window.innerWidth >= 1200) {
+                        localStorage.setItem('sidebar-collapsed', document.body.classList.contains('sidebar-collapsed'));
+                    }
+                }
             });
-        }
-        
-        // Desktop Sidebar Toggle & Auto-Collapse
-        const desktopToggle = document.getElementById('sidebar-desktop-toggle');
-        const body = document.body;
-        
-        function handleAutoCollapse() {
-            if (window.innerWidth < 1200 && window.innerWidth >= 992) {
-                // Auto collapse on tablet/small desktop
-                body.classList.add('sidebar-collapsed');
-            } else if (window.innerWidth >= 1200) {
-                // Restore preference on large desktop
-                if (localStorage.getItem('sidebar-collapsed') !== 'true') {
-                    body.classList.remove('sidebar-collapsed');
-                } else {
-                    body.classList.add('sidebar-collapsed');
+            
+            function handleAutoCollapse() {
+                if (window.innerWidth < 1200 && window.innerWidth >= 992) {
+                    document.body.classList.add('sidebar-collapsed');
+                } else if (window.innerWidth >= 1200) {
+                    if (localStorage.getItem('sidebar-collapsed') !== 'true') {
+                        document.body.classList.remove('sidebar-collapsed');
+                    } else {
+                        document.body.classList.add('sidebar-collapsed');
+                    }
                 }
             }
-        }
+            
+            handleAutoCollapse();
+            
+            // Remove old listener to avoid duplicates if HTMX re-evaluates
+            window.removeEventListener('resize', window._handleAutoCollapse);
+            window._handleAutoCollapse = handleAutoCollapse;
+            window.addEventListener('resize', window._handleAutoCollapse);
+        })();
         
-        // Initial check
-        handleAutoCollapse();
-        
-        // Listen for resize
-        window.addEventListener('resize', handleAutoCollapse);
-        
-        if (desktopToggle) {
-            desktopToggle.addEventListener('click', () => {
-                body.classList.toggle('sidebar-collapsed');
-                if (window.innerWidth >= 1200) {
-                    // Only save manual preference on large screens
-                    localStorage.setItem('sidebar-collapsed', body.classList.contains('sidebar-collapsed'));
-                }
+        // These only need to run once, globally
+        if (!window._htmxEventsBound) {
+            document.body.addEventListener('htmx:afterSwap', function() {
+                lucide.createIcons();
             });
+            
+            NProgress.configure({ showSpinner: false, minimum: 0.1 });
+            document.body.addEventListener('htmx:beforeRequest', function() {
+                NProgress.start();
+            });
+            document.body.addEventListener('htmx:afterRequest', function() {
+                NProgress.done();
+            });
+            window._htmxEventsBound = true;
         }
-        
-        // Re-initialize Lucide icons after HTMX swaps DOM
-        document.body.addEventListener('htmx:afterSwap', function() {
-            lucide.createIcons();
-        });
-        
-        // NProgress Hooks for HTMX
-        NProgress.configure({ showSpinner: false, minimum: 0.1 });
-        document.body.addEventListener('htmx:beforeRequest', function() {
-            NProgress.start();
-        });
-        document.body.addEventListener('htmx:afterRequest', function() {
-            NProgress.done();
-        });
     </script>
     {% block extra_js %}{% endblock %}
 </body>
