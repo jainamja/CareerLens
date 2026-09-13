@@ -99,12 +99,14 @@
             </div>
             
             <div class="content-wrapper h-100">
-                {% block content %}{% endblock %}
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    {% if request.user.is_authenticated %}
             </div>
         </main>
     </div>
-    {% else %}
-        {% block content %}{% endblock %}
     {% endif %}
 
     <!-- Bootstrap JS Bundle -->
