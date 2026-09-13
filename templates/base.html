@@ -22,6 +22,10 @@
     
     <!-- HTMX (For instant SPA-like page routing) -->
     <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- NProgress (Top loading bar for HTMX) -->
+    <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
+    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
 
     {% block extra_css %}{% endblock %}
 </head>
@@ -168,6 +172,15 @@
         // Re-initialize Lucide icons after HTMX swaps DOM
         document.body.addEventListener('htmx:afterSwap', function() {
             lucide.createIcons();
+        });
+        
+        // NProgress Hooks for HTMX
+        NProgress.configure({ showSpinner: false, minimum: 0.1 });
+        document.body.addEventListener('htmx:beforeRequest', function() {
+            NProgress.start();
+        });
+        document.body.addEventListener('htmx:afterRequest', function() {
+            NProgress.done();
         });
     </script>
     {% block extra_js %}{% endblock %}

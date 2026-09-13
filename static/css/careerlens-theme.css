@@ -548,3 +548,17 @@ body.sidebar-collapsed #sidebar-desktop-toggle {
     }
 }
 
+
+/* NProgress Top Loading Bar overrides */
+#nprogress .bar {
+  background: var(--cl-accent-violet) !important;
+  height: 3px !important;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--cl-accent-violet), 0 0 5px var(--cl-accent-violet) !important;
+}
+#nprogress .spinner-icon {
+  border-top-color: var(--cl-accent-violet) !important;
+  border-left-color: var(--cl-accent-violet) !important;
+}
+
