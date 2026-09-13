@@ -262,3 +262,65 @@ body.sidebar-collapsed .sidebar-footer {
         padding: 0.5rem !important;
     }
 }
+
+/* -------------------------------------------------------------
+   Floating Glass Sidebar (Apple/Vercel Style)
+   ------------------------------------------------------------- */
+@media (min-width: 992px) {
+    #sidebar {
+        top: 1rem !important;
+        bottom: 1rem !important;
+        left: 1rem !important;
+        height: calc(100vh - 2rem) !important;
+        border-radius: 20px !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        background-color: rgba(255, 255, 255, 0.3) !important;
+        backdrop-filter: blur(24px) saturate(180%) !important;
+        -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Shift main content to make room for the 1rem gap */
+    #main-content {
+        margin-left: calc(260px + 1rem) !important;
+        border-radius: 20px !important;
+    }
+    
+    body.sidebar-collapsed #main-content {
+        margin-left: calc(80px + 1rem) !important;
+    }
+
+    /* Adjust the toggle button so it looks good on a floating sidebar */
+    #sidebar-desktop-toggle {
+        right: -14px !important;
+        top: 24px !important;
+        border: 1px solid rgba(0,0,0,0.08) !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+        background-color: #ffffff !important;
+        color: var(--cl-primary) !important;
+    }
+}
+
+/* -------------------------------------------------------------
+   Active Menu Styling Refinement
+   ------------------------------------------------------------- */
+.sidebar-nav-link.active {
+    background-color: rgba(139, 92, 246, 0.1) !important;
+    color: var(--cl-accent-violet) !important;
+    font-weight: 700 !important;
+    border: 1px solid rgba(139, 92, 246, 0.2) !important;
+}
+.sidebar-nav-link.active i, .sidebar-nav-link.active svg {
+    color: var(--cl-accent-violet) !important;
+}
+
+/* Prevent text overflow by hiding it natively rather than display: none */
+body.sidebar-collapsed #sidebar:not(:hover) .sidebar-brand-text,
+body.sidebar-collapsed #sidebar:not(:hover) .sidebar-nav-link span,
+body.sidebar-collapsed #sidebar:not(:hover) .sidebar-footer .user-profile-menu .user-info {
+    opacity: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
