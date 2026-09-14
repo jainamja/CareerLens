@@ -23,6 +23,16 @@ class Resume(models.Model):
     processing_error = models.TextField(blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+
+    @property
+    def get_file_size(self):
+        try:
+            if self.file and hasattr(self.file, 'size'):
+                return self.file.size
+        except Exception:
+            pass
+        return 0
+
     def __str__(self):
         return f"{self.original_filename} ({self.user.username})"
 
@@ -45,6 +55,16 @@ class Skill(models.Model):
     category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     
+
+    @property
+    def get_file_size(self):
+        try:
+            if self.file and hasattr(self.file, 'size'):
+                return self.file.size
+        except Exception:
+            pass
+        return 0
+
     def __str__(self):
         return self.name
 
@@ -56,6 +76,16 @@ class ResumeSkill(models.Model):
     class Meta:
         unique_together = ('resume', 'skill')
         
+
+    @property
+    def get_file_size(self):
+        try:
+            if self.file and hasattr(self.file, 'size'):
+                return self.file.size
+        except Exception:
+            pass
+        return 0
+
     def __str__(self):
         return f"{self.resume.user.username} - {self.skill.name}"
 
