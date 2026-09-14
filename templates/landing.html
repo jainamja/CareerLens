@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}CareerLens | Match Resumes to Jobs with AI{% endblock %}
+
+{% block content %}
+<!-- Landing Page Hero -->
+<div class="container" style="min-height: calc(100vh - 100px); display: flex; align-items: center; padding-top: 4rem;">
+    <div class="row w-100 align-items-center">
+        <!-- Left Column: Copy & CTA -->
+        <div class="col-lg-6 reveal-init mb-5 mb-lg-0">
+            <div class="d-inline-flex align-items-center gap-2 px-3 py-1 rounded-pill glass-base mb-4 text-white" style="font-size: 0.85rem;">
+                <span style="width: 8px; height: 8px; background: var(--teal); border-radius: 50%; display: inline-block;"></span>
+                CareerLens AI Engine is Live
+            </div>
+            
+            <h1 class="display-font display-3 fw-bold mb-4" style="line-height: 1.1;">
+                Stop guessing. <br>
+                Start <span class="headline-gradient">matching.</span>
+            </h1>
+            
+            <p class="text-muted fs-4 mb-5" style="max-width: 500px;">
+                Upload your resume. Paste a job description. Let our AI calculate your exact match score and tell you exactly what you're missing.
+            </p>
+            
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{% url 'accounts:register' %}" class="btn-glass btn-primary-glow px-5 py-3 fs-5">Get Started Free</a>
+                <a href="{% url 'accounts:login' %}" class="btn-glass px-5 py-3 fs-5">Sign In</a>
+            </div>
+        </div>
+        
+        <!-- Right Column: Floating Glass Cards -->
+        <div class="col-lg-6 position-relative d-none d-lg-block" style="min-height: 500px;">
+            <div class="glass-card position-absolute" style="top: 10%; right: 10%; width: 320px; z-index: 3; animation: drift 8s infinite alternate ease-in-out;">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-circle bg-white" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="file-text" style="color: #000;"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-white">Frontend Engineer</div>
+                        <div class="text-muted small">Stripe</div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between text-white mb-2">
+                    <span>Match Score</span>
+                    <span class="fw-bold" style="color: var(--amber)">94%</span>
+                </div>
+                <div class="progress-glass">
+                    <div class="progress-bar-amber" style="width: 94%"></div>
+                </div>
+            </div>
+            
+            <div class="glass-card position-absolute" style="bottom: 10%; left: 10%; width: 280px; z-index: 2; animation: drift 12s infinite alternate-reverse ease-in-out;">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-circle" style="width: 40px; height: 40px; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="check-circle" style="color: var(--teal);"></i>
+                    </div>
+                    <div>
+                        <div class="fw-bold text-white">Skills Detected</div>
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge" style="background: rgba(63, 219, 192, 0.15); color: var(--teal); border: 1px solid rgba(63, 219, 192, 0.3);">React</span>
+                    <span class="badge" style="background: rgba(63, 219, 192, 0.15); color: var(--teal); border: 1px solid rgba(63, 219, 192, 0.3);">TypeScript</span>
+                    <span class="badge" style="background: rgba(63, 219, 192, 0.15); color: var(--teal); border: 1px solid rgba(63, 219, 192, 0.3);">Node.js</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logos Marquee -->
+<div class="w-100 py-5 overflow-hidden position-relative reveal-init" style="background: rgba(11, 15, 26, 0.4); border-top: 1px solid var(--stroke); border-bottom: 1px solid var(--stroke);">
+    <div class="d-flex w-100 align-items-center gap-5 px-4" style="animation: scrollLeft 30s linear infinite; white-space: nowrap;">
+        <!-- Using text as placeholder for logos -->
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Google</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Meta</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Netflix</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Stripe</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Vercel</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Linear</h4>
+        <!-- Duplicate for infinite scroll -->
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Google</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Meta</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Netflix</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Stripe</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Vercel</h4>
+        <h4 class="display-font text-muted opacity-50 mx-4 m-0">Linear</h4>
+    </div>
+</div>
+<style>
+@keyframes scrollLeft {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+.w-100.overflow-hidden:hover .d-flex {
+    animation-play-state: paused !important;
+}
+</style>
+
+<!-- How it works -->
+<div class="container py-5 my-5">
+    <div class="text-center reveal-init mb-5">
+        <h2 class="display-font display-5 mb-3 text-white">How it works</h2>
+        <p class="text-muted fs-5">Three simple steps to landing your dream job.</p>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4 reveal-init">
+            <div class="glass-card h-100 d-flex flex-column text-center align-items-center p-5">
+                <div class="display-font text-white opacity-25" style="font-size: 5rem; line-height: 1; margin-bottom: -1.5rem;">1</div>
+                <div class="rounded-circle mb-4" style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid var(--stroke); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;">
+                    <i data-lucide="upload" style="color: var(--amber)"></i>
+                </div>
+                <h3 class="fs-4 text-white">Upload Resume</h3>
+                <p class="text-muted">Upload your current resume in PDF or Word format. We parse your skills instantly.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4 reveal-init">
+            <div class="glass-card h-100 d-flex flex-column text-center align-items-center p-5">
+                <div class="display-font text-white opacity-25" style="font-size: 5rem; line-height: 1; margin-bottom: -1.5rem;">2</div>
+                <div class="rounded-circle mb-4" style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid var(--stroke); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;">
+                    <i data-lucide="link" style="color: var(--violet)"></i>
+                </div>
+                <h3 class="fs-4 text-white">Add Job Link</h3>
+                <p class="text-muted">Paste a URL to any job posting. Our AI analyzes the requirements and keywords.</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4 reveal-init">
+            <div class="glass-card h-100 d-flex flex-column text-center align-items-center p-5">
+                <div class="display-font text-white opacity-25" style="font-size: 5rem; line-height: 1; margin-bottom: -1.5rem;">3</div>
+                <div class="rounded-circle mb-4" style="width: 60px; height: 60px; background: rgba(255,255,255,0.05); border: 1px solid var(--stroke); display: flex; align-items: center; justify-content: center; position: relative; z-index: 2;">
+                    <i data-lucide="bar-chart" style="color: var(--teal)"></i>
+                </div>
+                <h3 class="fs-4 text-white">Get Matched</h3>
+                <p class="text-muted">Instantly see your match score and a tailored gap analysis to help you improve.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

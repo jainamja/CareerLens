@@ -1,59 +1,71 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Log in to CareerLens{% endblock %}
+{% block title %}Sign In | CareerLens{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="brand-header">
-            <a href="/" class="brand-logo">
-                <i data-lucide="briefcase"></i>
-                CareerLens
-            </a>
-            <p class="brand-subtitle">Welcome back. Continue managing your resumes, job matches, and applications.</p>
+<!-- Background Blobs (already in base.html if not authenticated, but ensure they show up) -->
+<div class="container d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 100px);">
+    <div class="auth-split glass-base shadow-lg reveal-init">
+        
+        <!-- Left Brand Panel -->
+        <div class="auth-brand">
+            <h1 class="display-font display-4 mb-4" style="position: relative; z-index: 2;">
+                Find your <br>
+                <span class="headline-gradient">perfect match</span>
+            </h1>
+            <p class="text-muted fs-5" style="position: relative; z-index: 2;">
+                Log in to CareerLens to track your applications, manage resumes, and discover opportunities tailored to your skills.
+            </p>
         </div>
 
-        {% if form.errors %}
-            <div class="alert-error">
-                <div class="d-flex align-items-center gap-2">
-                    <i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i>
-                    <span>Invalid username or password. Please try again.</span>
+        <!-- Right Form Panel -->
+        <div class="auth-form-wrap">
+            <h2 class="display-font mb-2">Welcome Back</h2>
+            <p class="text-muted mb-4">Sign in to your account</p>
+            
+            <form method="post" id="loginForm">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Username</label>
+                    <input type="text" name="username" class="form-control form-control-glass w-100" required placeholder="Enter your username">
                 </div>
-            </div>
-        {% endif %}
-
-        <form method="post" action="{% url 'accounts:login' %}">
-            {% csrf_token %}
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Password</label>
+                    <input type="password" name="password" class="form-control form-control-glass w-100" required placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="btn-primary-glow btn-glass w-100 py-3 rounded-pill" id="submitBtn" onclick="morphButton(event)">
+                    Sign In
+                </button>
+            </form>
             
-            <div class="mb-3">
-                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                {{ form.username }}
-            </div>
-            
-            <div class="mb-4">
-                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
-                {{ form.password }}
-            </div>
-            
-            <button type="submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2">
-                Log In
-                <i data-lucide="arrow-right" style="width: 18px; height: 18px;"></i>
-            </button>
-        </form>
-
-        <div class="auth-footer">
-            Don't have an account? <a href="{% url 'accounts:register' %}">Create one</a>
+            <p class="text-center text-muted mt-4">
+                Don't have an account? <a href="{% url 'accounts:register' %}" class="nav-link-sweep text-white d-inline">Register here</a>
+            </p>
         </div>
+        
     </div>
 </div>
 
 <script>
-    // Add Bootstrap form control classes to django generated fields
-    document.addEventListener("DOMContentLoaded", function() {
-        const inputs = document.querySelectorAll('input[type="text"], input[type="password"]');
-        inputs.forEach(input => {
-            input.classList.add('form-control');
-        });
-    });
+function morphButton(e) {
+    const form = document.getElementById('loginForm');
+    if (!form.checkValidity()) return; // Let HTML5 validation run
+    
+    // Optional: wait a tiny bit to show interaction before form actually submits
+    const btn = document.getElementById('submitBtn');
+    btn.classList.add('btn-loading');
+    
+    // For visual demonstration, we'll delay the actual form submission by 1 second to show the morph animation.
+    e.preventDefault();
+    setTimeout(() => {
+        btn.classList.remove('btn-loading');
+        btn.classList.add('btn-success-tick');
+        setTimeout(() => {
+            form.submit();
+        }, 500);
+    }, 1000);
+}
 </script>
 {% endblock %}

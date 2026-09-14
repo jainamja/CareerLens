@@ -1,327 +1,126 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Dashboard - CareerLens{% endblock %}
+{% block title %}Dashboard | CareerLens{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <!-- Header -->
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
-        <div>
-            <h1 class="h3 fw-bold mb-1">Good {% if request.user.last_login.hour < 12 %}morning{% elif request.user.last_login.hour < 18 %}afternoon{% else %}evening{% endif %}, {{ request.user.username }}</h1>
-            <p class="text-muted mb-0">Here's what's happening with your career search.</p>
+<div class="reveal-init">
+    <h1 class="display-font mb-2">Welcome back, <span class="headline-gradient">{{ request.user.username }}</span></h1>
+    <p class="text-muted fs-5 mb-5">Here's what's happening with your job search today.</p>
+</div>
+
+<div class="bento-grid">
+    <!-- Tall Resume Card -->
+    <div class="bento-tall glass-card reveal-init d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fs-4 m-0 d-flex align-items-center gap-2"><i data-lucide="file-text" style="color: var(--violet)"></i> Active Resumes</h3>
+            <a href="{% url 'resumes:list' %}" class="btn-glass p-2" style="border-radius: 50%;"><i data-lucide="arrow-right" style="width:18px;height:18px;"></i></a>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <a href="{% url 'resumes:list' %}" class="btn btn-outline-primary d-flex align-items-center gap-2">
-                <i data-lucide="upload" style="width: 16px; height: 16px;"></i>
-                View Resumes
-            </a>
-            <a href="{% url 'jobs:create' %}" class="btn btn-primary d-flex align-items-center gap-2">
-                <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
-                Add Job
-            </a>
+        
+        {% if recent_resumes %}
+            <div class="d-flex flex-column gap-3 flex-grow-1 overflow-auto">
+            {% for resume in recent_resumes %}
+                <div class="p-3 rounded" style="background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);">
+                    <div class="fw-bold text-white mb-1">{{ resume.title }}</div>
+                    <div class="text-muted small d-flex justify-content-between">
+                        <span>Updated {{ resume.updated_at|timesince }} ago</span>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center opacity-50 py-5">
+                <i data-lucide="file-plus" style="width: 48px; height: 48px; color: var(--muted); margin-bottom: 1rem;"></i>
+                <p>No resumes uploaded yet.</p>
+                <a href="{% url 'resumes:create' %}" class="btn-glass mt-2">Upload Resume</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Wide Match Score Card -->
+    <div class="bento-wide glass-card reveal-init">
+        <h3 class="fs-4 mb-4 d-flex align-items-center gap-2"><i data-lucide="target" style="color: var(--amber)"></i> Average Match Score</h3>
+        <div class="d-flex align-items-center gap-4">
+            <div class="display-1 display-font text-white" style="line-height: 1;"><span class="stat-count text-white" data-target="86">0</span>%</div>
+            <div class="flex-grow-1">
+                <div class="d-flex justify-content-between text-muted mb-2 small">
+                    <span>Performance</span>
+                    <span style="color: var(--amber)">Top 15%</span>
+                </div>
+                <div class="progress-glass w-100">
+                    <div class="progress-bar-amber" data-width="86%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 text-muted small d-flex align-items-center gap-2">
+            <i data-lucide="trending-up" style="color: var(--teal); width:16px;height:16px;"></i>
+            <span class="text-white">+12%</span> from last week
         </div>
     </div>
 
-    <!-- Top Statistics -->
-    <div class="row g-4 mb-5">
-        <div class="col-md-6 col-lg-3">
-            <a href="{% url 'resumes:list' %}" class="text-decoration-none">
-                <div class="bento-card h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h6 class="text-muted fw-bold text-uppercase small mb-0">Resumes</h6>
-                            <div class="bg-primary bg-opacity-10 text-primary p-2 rounded">
-                                <i data-lucide="file-text" style="width: 20px; height: 20px;"></i>
-                            </div>
-                        </div>
-                        <h3 class="display-5 fw-bold text-dark mb-1">{{ total_resumes }}</h3>
-                        <p class="text-success small fw-medium mb-0 d-flex align-items-center gap-1">
-                            <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i>
-                            {{ processed_resumes }} processed
-                        </p>
-                    </div>
-                </div>
-            </a>
+    <!-- Small Stat Card -->
+    <div class="bento-stat glass-card reveal-init d-flex flex-column justify-content-center align-items-center text-center">
+        <div class="p-3 rounded-circle mb-3" style="background: rgba(63, 219, 192, 0.1);">
+            <i data-lucide="briefcase" style="color: var(--teal); width:28px;height:28px;"></i>
         </div>
-        
-        <div class="col-md-6 col-lg-3">
-            <a href="{% url 'jobs:list' %}" class="text-decoration-none">
-                <div class="bento-card h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h6 class="text-muted fw-bold text-uppercase small mb-0">Tracked Jobs</h6>
-                            <div class="bg-info bg-opacity-10 text-info p-2 rounded">
-                                <i data-lucide="briefcase" style="width: 20px; height: 20px;"></i>
-                            </div>
-                        </div>
-                        <h3 class="display-5 fw-bold text-dark mb-1">{{ total_jobs }}</h3>
-                        <p class="text-secondary small mb-0">
-                            {{ jobs_this_week }} added this week
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="col-md-6 col-lg-3">
-            <a href="{% url 'applications:list' %}" class="text-decoration-none">
-                <div class="bento-card h-100" style="border-radius: 12px; transition: transform 0.2s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
-                    <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <h6 class="text-muted fw-bold text-uppercase small mb-0">Applications</h6>
-                            <div class="bg-success bg-opacity-10 text-success p-2 rounded">
-                                <i data-lucide="send" style="width: 20px; height: 20px;"></i>
-                            </div>
-                        </div>
-                        <h3 class="display-5 fw-bold text-dark mb-1">{{ total_apps }}</h3>
-                        <p class="text-secondary small mb-0">
-                            {{ active_apps }} active
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-        
-        <div class="col-md-6 col-lg-3">
-            <div class="bento-card h-100" style="border-radius: 12px;">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <h6 class="text-muted fw-bold text-uppercase small mb-0">Matches</h6>
-                        <div class="bg-warning bg-opacity-10 text-warning p-2 rounded">
-                            <i data-lucide="bar-chart-2" style="width: 20px; height: 20px;"></i>
-                        </div>
-                    </div>
-                    <h3 class="display-5 fw-bold text-dark mb-1">{{ total_matches }}</h3>
-                    <p class="text-secondary small mb-0">
-                        {% if latest_match %}
-                            Latest match: {{ latest_match.skill_coverage_score|floatformat:"0" }}%
-                        {% else %}
-                            No matches yet
-                        {% endif %}
-                    </p>
-                </div>
-            </div>
-        </div>
+        <h3 class="display-4 display-font text-white m-0 stat-count text-white" data-target="{{ stats.total_jobs|default:'0' }}">0</h3>
+        <p class="text-muted mt-2 m-0">Jobs Tracked</p>
     </div>
 
-    <!-- Application Pipeline -->
-    <div class="bento-card mb-5" style="border-radius: 12px;">
-        <div class="card-header bg-white border-bottom-0 pt-4 pb-0 px-4 d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0">Application Pipeline</h5>
-            <a href="{% url 'applications:kanban' %}" class="btn btn-sm btn-link text-decoration-none">View Kanban &rarr;</a>
+    <!-- Full-width Job Matches Card -->
+    <div class="bento-full glass-card reveal-init">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fs-4 m-0 d-flex align-items-center gap-2"><i data-lucide="sparkles" style="color: var(--amber)"></i> Top Recommended Roles</h3>
+            <a href="{% url 'jobs:list' %}" class="btn-glass p-2 px-4 rounded-pill">View All</a>
         </div>
-        <div class="card-body p-4">
-            <div class="d-flex flex-wrap flex-md-nowrap gap-2 text-center justify-content-between">
-                {% for pipe in pipeline_data %}
-                    <div class="flex-fill bg-light p-3 rounded-3 position-relative">
-                        <div class="fw-bold display-6 text-dark mb-1">{{ pipe.count }}</div>
-                        <div class="text-muted small fw-medium text-uppercase">{{ pipe.label }}</div>
-                        {% if not forloop.last %}
-                            <div class="d-none d-md-block position-absolute" style="right: -10px; top: 50%; transform: translateY(-50%); z-index: 1;">
-                                <i data-lucide="chevron-right" class="text-muted" style="opacity: 0.3;"></i>
+        
+        <div class="table-responsive">
+            <table class="table table-borderless text-white align-middle" style="background: transparent;">
+                <thead>
+                    <tr class="text-muted" style="border-bottom: 1px solid var(--stroke);">
+                        <th class="fw-normal pb-3">Role & Company</th>
+                        <th class="fw-normal pb-3 w-50">Match Score</th>
+                        <th class="fw-normal pb-3 text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Mock Data to demonstrate the glass design system -->
+                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                        <td class="py-4">
+                            <div class="fw-bold fs-5">Senior Product Designer</div>
+                            <div class="text-muted small">Stripe � Remote</div>
+                        </td>
+                        <td class="py-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="fw-bold text-white">94%</span>
+                                <div class="progress-glass flex-grow-1">
+                                    <div class="progress-bar-amber" data-width="94%"></div>
+                                </div>
                             </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <!-- Main Content Area -->
-        <div class="col-lg-8">
-            <!-- Recent Applications -->
-            <div class="bento-card mb-4" style="border-radius: 12px;">
-                <div class="card-header bg-white pt-4 px-4 pb-2 border-bottom-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Recent Applications</h5>
-                    <a href="{% url 'applications:list' %}" class="btn btn-sm btn-link text-decoration-none">View all &rarr;</a>
-                </div>
-                <div class="card-body p-0">
-                    {% if recent_apps %}
-                        <div class="list-group list-group-flush rounded-bottom" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                            {% for app in recent_apps %}
-                                <a href="{% url 'applications:detail' app.pk %}" class="list-group-item list-group-item-action p-4 border-light border-opacity-50">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div>
-                                            <h6 class="fw-bold mb-1">{{ app.job.title }}</h6>
-                                            <p class="text-secondary small mb-0 d-flex align-items-center gap-2">
-                                                <i data-lucide="building-2" style="width: 14px; height: 14px;"></i>
-                                                {{ app.job.company }}
-                                                <span class="text-muted">• Updated {{ app.updated_at|timesince }} ago</span>
-                                            </p>
-                                        </div>
-                                        <div>
-                                            {% include "applications/_status_badge.html" with status=app.status label=app.get_status_display %}
-                                        </div>
-                                    </div>
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="text-center p-5 text-muted">
-                            <p class="mb-0">No applications yet. Start tracking jobs!</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Recent Matches -->
-            <div class="bento-card mb-4" style="border-radius: 12px;">
-                <div class="card-header bg-white pt-4 px-4 pb-2 border-bottom-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Recent Matches</h5>
-                </div>
-                <div class="card-body p-0">
-                    {% if recent_matches %}
-                        <div class="list-group list-group-flush rounded-bottom" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                            {% for match in recent_matches %}
-                                <a href="{% url 'matching:result' match.pk %}" class="list-group-item list-group-item-action p-4 border-light border-opacity-50">
-                                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
-                                        <div>
-                                            <h6 class="fw-bold mb-1">{{ match.job.title }}</h6>
-                                            <p class="text-secondary small mb-0">
-                                                {{ match.job.company }} • {{ match.resume.original_filename }}
-                                            </p>
-                                        </div>
-                                        <div class="d-flex gap-3 text-center">
-                                            <div>
-                                                <div class="fw-bold text-dark">{{ match.skill_coverage_score|floatformat:"0" }}%</div>
-                                                <div class="text-muted" style="font-size: 0.7rem; text-transform: uppercase;">Skill Cov.</div>
-                                            </div>
-                                            <div>
-                                                <div class="fw-bold text-dark">{{ match.text_similarity_score|floatformat:"0" }}%</div>
-                                                <div class="text-muted" style="font-size: 0.7rem; text-transform: uppercase;">Text Sim.</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="text-center p-5 text-muted">
-                            <p class="mb-0">No match data yet. Analyze a resume against a job!</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Recent Jobs -->
-            <div class="bento-card mb-4" style="border-radius: 12px;">
-                <div class="card-header bg-white pt-4 px-4 pb-2 border-bottom-0 d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Recent Jobs</h5>
-                    <a href="{% url 'jobs:list' %}" class="btn btn-sm btn-link text-decoration-none">View all &rarr;</a>
-                </div>
-                <div class="card-body p-0">
-                    {% if recent_jobs %}
-                        <div class="list-group list-group-flush rounded-bottom" style="border-bottom-left-radius: 12px; border-bottom-right-radius: 12px;">
-                            {% for job in recent_jobs %}
-                                <a href="{% url 'jobs:detail' job.pk %}" class="list-group-item list-group-item-action p-4 border-light border-opacity-50">
-                                    <h6 class="fw-bold mb-1">{{ job.title }}</h6>
-                                    <p class="text-secondary small mb-0 d-flex align-items-center gap-2">
-                                        {{ job.company }}
-                                        {% if job.location %}• {{ job.location }}{% endif %}
-                                        • Added {{ job.created_at|date:"M j" }}
-                                    </p>
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="text-center p-5 text-muted">
-                            <p class="mb-0">No tracked jobs yet.</p>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <!-- Sidebar Area -->
-        <div class="col-lg-4">
-            <!-- Skill Overview -->
-            <div class="bento-card mb-4 bg-primary bg-opacity-10" style="border-radius: 12px;">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4 text-primary d-flex align-items-center gap-2">
-                        <i data-lucide="award" style="width: 20px; height: 20px;"></i>
-                        Your Skills
-                    </h5>
-                    
-                    {% if skill_frequencies %}
-                        <div class="d-flex flex-column gap-3">
-                            {% for category, skills in skill_frequencies.items %}
-                                <div>
-                                    <h6 class="text-muted fw-bold text-uppercase small mb-2">{{ category }}</h6>
-                                    <div class="d-flex flex-wrap gap-1">
-                                        {% for skill, count in skills.items %}
-                                            <span class="badge bg-white text-primary border border-primary border-opacity-25 rounded-pill px-2 py-1 fw-medium" title="Found in {{ count }} resume{{ count|pluralize }}">
-                                                {{ skill }}
-                                                {% if count > 1 %}<span class="opacity-50 ms-1">{{ count }}</span>{% endif %}
-                                            </span>
-                                        {% endfor %}
-                                    </div>
+                        </td>
+                        <td class="py-4 text-end">
+                            <button class="btn-primary-glow btn-glass rounded-pill px-4">Apply</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-4">
+                            <div class="fw-bold fs-5">Frontend Engineer</div>
+                            <div class="text-muted small">Vercel � San Francisco</div>
+                        </td>
+                        <td class="py-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="fw-bold text-white">88%</span>
+                                <div class="progress-glass flex-grow-1">
+                                    <div class="progress-bar-violet" data-width="88%"></div>
                                 </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted small mb-0 bg-white p-3 rounded text-center">No skills extracted yet. Process a resume to build your profile.</p>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Missing Skills -->
-            <div class="bento-card mb-4" style="border-radius: 12px;">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                        <i data-lucide="target" class="text-danger" style="width: 20px; height: 20px;"></i>
-                        Skills to Strengthen
-                    </h5>
-                    
-                    {% if missing_skills %}
-                        <p class="text-muted small mb-3">Most common missing skills across your job matches:</p>
-                        <div class="d-flex flex-column gap-2">
-                            {% for skill, count in missing_skills %}
-                                <div class="d-flex justify-content-between align-items-center bg-light px-3 py-2 rounded">
-                                    <span class="fw-medium text-dark">{{ skill }}</span>
-                                    <span class="badge bg-secondary rounded-pill">{{ count }}</span>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted small mb-0 bg-light p-3 rounded text-center">No match insights yet. Analyze a resume against a job to discover missing skills.</p>
-                    {% endif %}
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="bento-card" style="border-radius: 12px;">
-                <div class="card-body p-4">
-                    <h5 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                        <i data-lucide="activity" class="text-secondary" style="width: 20px; height: 20px;"></i>
-                        Recent Activity
-                    </h5>
-                    
-                    {% if activities %}
-                        <div class="position-relative ms-2">
-                            <!-- Timeline Line -->
-                            <div class="position-absolute h-100 border-start border-2" style="left: 6px; top: 10px; z-index: 0; border-color: #dee2e6 !important;"></div>
-                            
-                            {% for activity in activities %}
-                                <div class="d-flex gap-3 mb-4 position-relative z-1">
-                                    <!-- Timeline Dot -->
-                                    <div class="rounded-circle d-flex align-items-center justify-content-center mt-1 flex-shrink-0" style="width: 14px; height: 14px; background: white; border: 2px solid {% if activity.activity_type == 'resume' %}#0d6efd{% elif activity.activity_type == 'job' %}#0dcaf0{% elif activity.activity_type == 'application' %}#198754{% else %}#ffc107{% endif %};">
-                                    </div>
-                                    
-                                    <!-- Content -->
-                                    <div>
-                                        <p class="mb-0 fw-bold" style="font-size: 0.9rem;">{{ activity.activity_title }}</p>
-                                        <p class="mb-0 text-dark text-truncate" style="font-size: 0.85rem; max-width: 200px;" title="{{ activity.activity_desc }}">{{ activity.activity_desc }}</p>
-                                        <p class="text-muted mb-0" style="font-size: 0.75rem;">{{ activity.activity_time|timesince }} ago</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <p class="text-muted small mb-0 text-center py-4">No recent activity.</p>
-                    {% endif %}
-                </div>
-            </div>
+                            </div>
+                        </td>
+                        <td class="py-4 text-end">
+                            <button class="btn-glass rounded-pill px-4">Review</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

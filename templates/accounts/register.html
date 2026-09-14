@@ -1,53 +1,72 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Create your CareerLens account{% endblock %}
+{% block title %}Register | CareerLens{% endblock %}
 
 {% block content %}
-<div class="auth-container">
-    <div class="auth-card">
-        <div class="brand-header">
-            <a href="/" class="brand-logo">
-                <i data-lucide="briefcase"></i>
-                CareerLens
-            </a>
-            <p class="brand-subtitle">Analyze your resume, understand your skills, and track your job applications in one place.</p>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 100px);">
+    <div class="auth-split glass-base shadow-lg reveal-init">
+        
+        <!-- Left Brand Panel -->
+        <div class="auth-brand">
+            <h1 class="display-font display-4 mb-4" style="position: relative; z-index: 2;">
+                Start your <br>
+                <span class="headline-gradient">career journey</span>
+            </h1>
+            <p class="text-muted fs-5" style="position: relative; z-index: 2;">
+                Join CareerLens to get AI-powered resume scoring and discover roles where you truly stand out.
+            </p>
         </div>
 
-        <form method="post" action="{% url 'accounts:register' %}">
-            {% csrf_token %}
+        <!-- Right Form Panel -->
+        <div class="auth-form-wrap">
+            <h2 class="display-font mb-2">Create Account</h2>
+            <p class="text-muted mb-4">Sign up to get started</p>
             
-            {% for field in form %}
+            <form method="post" id="registerForm">
+                {% csrf_token %}
                 <div class="mb-3">
-                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                    {{ field }}
-                    {% if field.errors %}
-                        <div class="text-danger mt-1" style="font-size: 0.8rem;">
-                            {% for error in field.errors %}
-                                {{ error }}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
+                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Username</label>
+                    <input type="text" name="username" class="form-control form-control-glass w-100" required placeholder="Choose a username">
                 </div>
-            {% endfor %}
+                <div class="mb-3">
+                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Email (Optional)</label>
+                    <input type="email" name="email" class="form-control form-control-glass w-100" placeholder="Enter your email">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Password</label>
+                    <input type="password" name="password" class="form-control form-control-glass w-100" required placeholder="Create a password">
+                </div>
+                
+                <button type="submit" class="btn-primary-glow btn-glass w-100 py-3 rounded-pill" id="submitBtnReg" onclick="morphButtonReg(event)">
+                    Create Account
+                </button>
+            </form>
             
-            <button type="submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center gap-2 mt-2">
-                Create Account
-                <i data-lucide="user-plus" style="width: 18px; height: 18px;"></i>
-            </button>
-        </form>
-
-        <div class="auth-footer">
-            Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
+            <p class="text-center text-muted mt-4">
+                Already have an account? <a href="{% url 'accounts:login' %}" class="nav-link-sweep text-white d-inline">Sign In</a>
+            </p>
         </div>
+        
     </div>
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"]');
-        inputs.forEach(input => {
-            input.classList.add('form-control');
-        });
-    });
+function morphButtonReg(e) {
+    const form = document.getElementById('registerForm');
+    if (!form.checkValidity()) return;
+    
+    const btn = document.getElementById('submitBtnReg');
+    btn.classList.add('btn-loading');
+    
+    e.preventDefault();
+    setTimeout(() => {
+        btn.classList.remove('btn-loading');
+        btn.classList.add('btn-success-tick');
+        setTimeout(() => {
+            form.submit();
+        }, 500);
+    }, 1000);
+}
 </script>
 {% endblock %}
