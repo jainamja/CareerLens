@@ -32,7 +32,7 @@
             <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center opacity-50 py-5">
                 <i data-lucide="file-plus" style="width: 48px; height: 48px; color: var(--muted); margin-bottom: 1rem;"></i>
                 <p>No resumes uploaded yet.</p>
-                <a href="{% url 'resumes:create' %}" class="btn-glass mt-2">Upload Resume</a>
+                <a href="{% url 'resumes:list' %}" class="btn-glass mt-2">Upload Resume</a>
             </div>
         {% endif %}
     </div>
@@ -88,7 +88,7 @@
                     <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
                         <td class="py-4">
                             <div class="fw-bold fs-5">Senior Product Designer</div>
-                            <div class="text-muted small">Stripe • Remote</div>
+                            <div class="text-muted small">Stripe  Remote</div>
                         </td>
                         <td class="py-4">
                             <div class="d-flex align-items-center gap-3">
@@ -105,7 +105,7 @@
                     <tr>
                         <td class="py-4">
                             <div class="fw-bold fs-5">Frontend Engineer</div>
-                            <div class="text-muted small">Vercel • San Francisco</div>
+                            <div class="text-muted small">Vercel  San Francisco</div>
                         </td>
                         <td class="py-4">
                             <div class="d-flex align-items-center gap-3">
@@ -124,4 +124,4 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock %}
