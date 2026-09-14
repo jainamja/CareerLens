@@ -101,14 +101,16 @@
       </div>
     </div>
 
-    <!-- Main Content Wrapper -->
+    {% endif %}
+    <!-- Main Content Wrapper (Authenticated) -->
+    {% if request.user.is_authenticated %}
     <main class="container py-5" style="margin-top: 80px;">
-        {% block content %}{% endblock %}
-    </main>
+    {% endif %}
 
-    {% else %}
-        <!-- For non-authenticated pages like landing, login, register -->
         {% block content %}{% endblock %}
+
+    {% if request.user.is_authenticated %}
+    </main>
     {% endif %}
 
     <!-- Bootstrap JS -->
@@ -136,4 +138,4 @@
     </script>
     {% block extra_js %}{% endblock %}
 </body>
-</html>
+</html>
