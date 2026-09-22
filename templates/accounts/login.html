@@ -3,69 +3,63 @@
 
 {% block title %}Sign In | CareerLens{% endblock %}
 
-{% block content %}
-<!-- Background Blobs (already in base.html if not authenticated, but ensure they show up) -->
-<div class="container d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 100px);">
-    <div class="auth-split glass-base shadow-lg reveal-init">
-        
-        <!-- Left Brand Panel -->
-        <div class="auth-brand">
-            <h1 class="display-font display-4 mb-4" style="position: relative; z-index: 2;">
-                Find your <br>
-                <span class="headline-gradient">perfect match</span>
-            </h1>
-            <p class="text-muted fs-5" style="position: relative; z-index: 2;">
-                Log in to CareerLens to track your applications, manage resumes, and discover opportunities tailored to your skills.
-            </p>
+{% block auth_content %}
+<div class="w-full max-w-md w-full mx-auto animate-fade-in-up">
+    <!-- Brand Logo/Header -->
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-indigo-500/10 text-indigo-500 dark:bg-indigo-400/10 dark:text-indigo-400 mb-4">
+            <i data-lucide="layers" class="w-8 h-8"></i>
         </div>
+        <h1 class="text-3xl font-bold tracking-tight text-[var(--text-main)]">Welcome back</h1>
+        <p class="mt-2 text-[var(--text-muted)]">Sign in to your account</p>
+    </div>
 
-        <!-- Right Form Panel -->
-        <div class="auth-form-wrap">
-            <h2 class="display-font mb-2">Welcome Back</h2>
-            <p class="text-muted mb-4">Sign in to your account</p>
+    <!-- Login Card -->
+    <div class="saas-card p-6 sm:p-8">
+        <form method="post" id="loginForm" class="space-y-5">
+            {% csrf_token %}
             
-            <form method="post" id="loginForm">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Username</label>
-                    <input type="text" name="username" class="form-control form-control-glass w-100" required placeholder="Enter your username">
-                </div>
-                <div class="mb-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Password</label>
-                    <input type="password" name="password" class="form-control form-control-glass w-100" required placeholder="Enter your password">
-                </div>
-                
-                <button type="submit" class="btn-primary-glow btn-glass w-100 py-3 rounded-pill" id="submitBtn" onclick="morphButton(event)">
+            <div class="space-y-1 animate-fade-in-up delay-50 opacity-0">
+                <label class="block text-sm font-medium text-[var(--text-main)]">Username</label>
+                <input type="text" name="username" class="saas-input w-full focus-ring-indigo" required placeholder="Enter your username">
+            </div>
+            
+            <div class="space-y-1 animate-fade-in-up delay-100 opacity-0">
+                <label class="block text-sm font-medium text-[var(--text-main)]">Password</label>
+                <input type="password" name="password" class="saas-input w-full focus-ring-indigo" required placeholder="Enter your password">
+            </div>
+            
+            <div class="pt-2 animate-fade-in-up delay-150 opacity-0">
+                <button type="submit" class="saas-btn-primary w-full flex justify-center items-center py-2.5 focus-ring-indigo" id="submitBtn">
                     Sign In
                 </button>
-            </form>
-            
-            <p class="text-center text-muted mt-4">
-                Don't have an account? <a href="{% url 'accounts:register' %}" class="nav-link-sweep text-white d-inline">Register here</a>
-            </p>
-        </div>
-        
+            </div>
+        </form>
     </div>
+
+    <p class="mt-6 text-center text-sm text-[var(--text-muted)] animate-fade-in-up delay-200 opacity-0">
+        Don't have an account? 
+        <a href="{% url 'accounts:register' %}" class="font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors focus-ring-indigo rounded">
+            Register here
+        </a>
+    </p>
 </div>
 
 <script>
-function morphButton(e) {
-    const form = document.getElementById('loginForm');
-    if (!form.checkValidity()) return; // Let HTML5 validation run
-    
-    // Optional: wait a tiny bit to show interaction before form actually submits
+document.getElementById('loginForm').addEventListener('submit', function(e) {
     const btn = document.getElementById('submitBtn');
-    btn.classList.add('btn-loading');
+    if (!this.checkValidity()) return;
     
-    // For visual demonstration, we'll delay the actual form submission by 1 second to show the morph animation.
-    e.preventDefault();
+    // Add loading state visually
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>`;
+    lucide.createIcons();
+    
+    // Slight delay to let animation show before page unloads
     setTimeout(() => {
-        btn.classList.remove('btn-loading');
-        btn.classList.add('btn-success-tick');
-        setTimeout(() => {
-            form.submit();
-        }, 500);
-    }, 1000);
-}
+        // Just visually show a checkmark right before submit if we wanted, 
+        // but simple spinner is better for SaaS.
+    }, 100);
+});
 </script>
 {% endblock %}

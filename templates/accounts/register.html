@@ -3,70 +3,62 @@
 
 {% block title %}Register | CareerLens{% endblock %}
 
-{% block content %}
-<div class="container d-flex align-items-center justify-content-center" style="min-height: calc(100vh - 100px);">
-    <div class="auth-split glass-base shadow-lg reveal-init">
-        
-        <!-- Left Brand Panel -->
-        <div class="auth-brand">
-            <h1 class="display-font display-4 mb-4" style="position: relative; z-index: 2;">
-                Start your <br>
-                <span class="headline-gradient">career journey</span>
-            </h1>
-            <p class="text-muted fs-5" style="position: relative; z-index: 2;">
-                Join CareerLens to get AI-powered resume scoring and discover roles where you truly stand out.
-            </p>
+{% block auth_content %}
+<div class="w-full max-w-md mx-auto animate-fade-in-up">
+    <!-- Brand Logo/Header -->
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-indigo-500/10 text-indigo-500 dark:bg-indigo-400/10 dark:text-indigo-400 mb-4">
+            <i data-lucide="layers" class="w-8 h-8"></i>
         </div>
+        <h1 class="text-3xl font-bold tracking-tight text-[var(--text-main)]">Create an account</h1>
+        <p class="mt-2 text-[var(--text-muted)]">Join CareerLens to track applications</p>
+    </div>
 
-        <!-- Right Form Panel -->
-        <div class="auth-form-wrap">
-            <h2 class="display-font mb-2">Create Account</h2>
-            <p class="text-muted mb-4">Sign up to get started</p>
+    <!-- Register Card -->
+    <div class="saas-card p-6 sm:p-8">
+        <form method="post" id="registerForm" class="space-y-5">
+            {% csrf_token %}
             
-            <form method="post" id="registerForm">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Username</label>
-                    <input type="text" name="username" class="form-control form-control-glass w-100" required placeholder="Choose a username">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Email (Optional)</label>
-                    <input type="email" name="email" class="form-control form-control-glass w-100" placeholder="Enter your email">
-                </div>
-                <div class="mb-4">
-                    <label class="form-label text-muted small text-uppercase fw-bold tracking-wider">Password</label>
-                    <input type="password" name="password" class="form-control form-control-glass w-100" required placeholder="Create a password">
-                </div>
-                
-                <button type="submit" class="btn-primary-glow btn-glass w-100 py-3 rounded-pill" id="submitBtnReg" onclick="morphButtonReg(event)">
+            <div class="space-y-1 animate-fade-in-up delay-50 opacity-0">
+                <label class="block text-sm font-medium text-[var(--text-main)]">Username</label>
+                <input type="text" name="username" class="saas-input w-full focus-ring-indigo" required placeholder="Choose a username">
+            </div>
+            
+            <div class="space-y-1 animate-fade-in-up delay-100 opacity-0">
+                <label class="block text-sm font-medium text-[var(--text-main)]">Email <span class="text-[var(--text-muted)] font-normal">(Optional)</span></label>
+                <input type="email" name="email" class="saas-input w-full focus-ring-indigo" placeholder="Enter your email">
+            </div>
+            
+            <div class="space-y-1 animate-fade-in-up delay-150 opacity-0">
+                <label class="block text-sm font-medium text-[var(--text-main)]">Password</label>
+                <input type="password" name="password" class="saas-input w-full focus-ring-indigo" required placeholder="Create a password">
+            </div>
+            
+            <div class="pt-2 animate-fade-in-up delay-200 opacity-0">
+                <button type="submit" class="saas-btn-primary w-full flex justify-center items-center py-2.5 focus-ring-indigo" id="submitBtnReg">
                     Create Account
                 </button>
-            </form>
-            
-            <p class="text-center text-muted mt-4">
-                Already have an account? <a href="{% url 'accounts:login' %}" class="nav-link-sweep text-white d-inline">Sign In</a>
-            </p>
-        </div>
-        
+            </div>
+        </form>
     </div>
+
+    <p class="mt-6 text-center text-sm text-[var(--text-muted)] animate-fade-in-up delay-250 opacity-0">
+        Already have an account? 
+        <a href="{% url 'accounts:login' %}" class="font-medium text-[var(--accent)] hover:text-[var(--accent-hover)] transition-colors focus-ring-indigo rounded">
+            Sign In
+        </a>
+    </p>
 </div>
 
 <script>
-function morphButtonReg(e) {
-    const form = document.getElementById('registerForm');
-    if (!form.checkValidity()) return;
-    
+document.getElementById('registerForm').addEventListener('submit', function(e) {
     const btn = document.getElementById('submitBtnReg');
-    btn.classList.add('btn-loading');
+    if (!this.checkValidity()) return;
     
-    e.preventDefault();
-    setTimeout(() => {
-        btn.classList.remove('btn-loading');
-        btn.classList.add('btn-success-tick');
-        setTimeout(() => {
-            form.submit();
-        }, 500);
-    }, 1000);
-}
+    // Add loading state visually
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>`;
+    lucide.createIcons();
+});
 </script>
 {% endblock %}
