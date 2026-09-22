@@ -3,139 +3,147 @@
 {% block title %}{{ job.title }} - CareerLens{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
-            <div class="d-flex align-items-center mb-4">
-                <a href="{% url 'jobs:list' %}" class="btn btn-link text-decoration-none p-0 me-3 text-muted">
-                    <i data-lucide="arrow-left" style="width: 20px; height: 20px;"></i>
+<div class="mb-6 animate-fade-in-up">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <a href="{% url 'jobs:list' %}" class="p-2 bg-[var(--bg-surface-hover)] border border-[var(--border-color)] rounded-lg text-[var(--text-muted)] hover:text-[var(--text-main)] hover:border-indigo-500/30 transition-colors focus-ring-indigo">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </a>
+            <h1 class="text-2xl font-bold text-[var(--text-main)]">Job Details</h1>
+        </div>
+        
+        <div class="flex flex-wrap items-center gap-2">
+            {% if job.applications.all %}
+                {% with app=job.applications.first %}
+                    <a href="{% url 'applications:detail' app.pk %}" class="saas-btn-secondary text-sm flex items-center gap-2">
+                        <i data-lucide="eye" class="w-4 h-4"></i> View Application
+                    </a>
+                {% endwith %}
+            {% else %}
+                <a href="{% url 'applications:create' %}?job={{ job.pk }}" class="px-4 py-2 text-sm font-medium text-emerald-700 bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50 rounded-lg transition-colors flex items-center gap-2">
+                    <i data-lucide="briefcase" class="w-4 h-4"></i> Track Application
                 </a>
-                <h1 class="h4 fw-bold mb-0">Job Details</h1>
-                
-                <div class="ms-auto d-flex flex-wrap gap-2 justify-content-md-end">
-                    {% if job.applications.all %}
-                        {% with app=job.applications.first %}
-                            <a href="{% url 'applications:detail' app.pk %}" class="btn btn-outline-primary d-flex align-items-center gap-2">
-                                <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
-                                View Application
-                            </a>
-                        {% endwith %}
-                    {% else %}
-                        <a href="{% url 'applications:create' %}?job={{ job.pk }}" class="btn btn-success d-flex align-items-center gap-2">
-                            <i data-lucide="briefcase" style="width: 16px; height: 16px;"></i>
-                            Track Application
-                        </a>
-                    {% endif %}
-                    
-                    <a href="{% url 'matching:select_resume' job.pk %}" class="btn btn-primary d-flex align-items-center gap-2">
-                        <i data-lucide="bar-chart-2" style="width: 16px; height: 16px;"></i>
-                        Analyze Match
-                    </a>
-                    <a href="{% url 'jobs:edit' job.pk %}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
-                        <i data-lucide="edit" style="width: 16px; height: 16px;"></i>
-                        Edit
-                    </a>
-                    <a href="{% url 'jobs:delete' job.pk %}" class="btn btn-outline-danger d-flex align-items-center gap-2">
-                        <i data-lucide="trash-2" style="width: 16px; height: 16px;"></i>
-                        Delete
-                    </a>
-                </div>
+            {% endif %}
+            
+            <a href="{% url 'matching:select_resume' job.pk %}" class="saas-btn-primary text-sm flex items-center gap-2">
+                <i data-lucide="bar-chart-2" class="w-4 h-4"></i> Analyze Match
+            </a>
+            
+            <div class="flex items-center gap-2 ml-2 pl-2 border-l border-[var(--border-color)]">
+                <a href="{% url 'jobs:edit' job.pk %}" class="p-2 text-[var(--text-muted)] hover:text-indigo-500 rounded focus-ring-indigo transition-colors" title="Edit">
+                    <i data-lucide="edit" class="w-4 h-4"></i>
+                </a>
+                <a href="{% url 'jobs:delete' job.pk %}" class="p-2 text-[var(--text-muted)] hover:text-red-500 rounded focus-ring-indigo transition-colors" title="Delete">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </a>
             </div>
+        </div>
+    </div>
+</div>
 
-            <div class="bento-card mb-4">
-                <div class="card-body p-4 p-md-5">
-                    <div class="mb-4">
-                        <h2 class="fw-bold text-dark mb-1">{{ job.title }}</h2>
-                        <h4 class="text-muted fw-normal mb-3 d-flex align-items-center gap-2">
-                            <i data-lucide="building-2" style="width: 20px; height: 20px;"></i>
-                            {{ job.company }}
-                        </h4>
-                        
-                        <div class="d-flex flex-wrap gap-4 text-muted small mt-4">
-                            {% if job.location %}
-                            <div class="d-flex align-items-center gap-1">
-                                <i data-lucide="map-pin" style="width: 16px; height: 16px;"></i>
-                                <span>{{ job.location }}</span>
-                            </div>
-                            {% endif %}
-                            
-                            {% if job.salary %}
-                            <div class="d-flex align-items-center gap-1">
-                                <i data-lucide="banknote" style="width: 16px; height: 16px;"></i>
-                                <span>{{ job.salary }}</span>
-                            </div>
-                            {% endif %}
-                            
-                            <div class="d-flex align-items-center gap-1">
-                                <i data-lucide="calendar" style="width: 16px; height: 16px;"></i>
-                                <span>Added {{ job.created_at|date:"M j, Y" }}</span>
-                            </div>
-                            
-                            {% if job.job_url %}
-                            <div class="d-flex align-items-center gap-1">
-                                <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
-                                <a href="{{ job.job_url }}" target="_blank" rel="noopener noreferrer" class="text-decoration-none">View Original Posting</a>
-                            </div>
-                            {% endif %}
-                        </div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6 animate-fade-in-up delay-50 opacity-0">
+        <!-- Main Job Info -->
+        <div class="saas-card p-6">
+            <h2 class="text-xl font-bold text-[var(--text-main)] mb-1">{{ job.title }}</h2>
+            <h3 class="text-base font-medium text-[var(--text-muted)] flex items-center gap-2 mb-6">
+                <i data-lucide="building-2" class="w-4 h-4 text-[var(--accent)]"></i> {{ job.company }}
+            </h3>
+            
+            <div class="flex flex-wrap gap-y-3 gap-x-6">
+                {% if job.location %}
+                <div class="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                    <div class="p-1.5 bg-[var(--bg-surface-hover)] rounded-md">
+                        <i data-lucide="map-pin" class="w-4 h-4"></i>
                     </div>
-                    
-                    <hr class="my-4">
-                    
-                    <h5 class="fw-bold mb-3">Job Description</h5>
-                    <div class="text-secondary" style="white-space: pre-line; line-height: 1.6;">
-                        {{ job.description }}
-                    </div>
+                    <span>{{ job.location }}</span>
                 </div>
+                {% endif %}
+                
+                {% if job.salary %}
+                <div class="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                    <div class="p-1.5 bg-[var(--bg-surface-hover)] rounded-md">
+                        <i data-lucide="banknote" class="w-4 h-4 text-emerald-500"></i>
+                    </div>
+                    <span>{{ job.salary }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="flex items-center gap-2 text-sm text-[var(--text-muted)]">
+                    <div class="p-1.5 bg-[var(--bg-surface-hover)] rounded-md">
+                        <i data-lucide="calendar" class="w-4 h-4"></i>
+                    </div>
+                    <span>Added {{ job.created_at|date:"M j, Y" }}</span>
+                </div>
+                
+                {% if job.job_url %}
+                <div class="flex items-center gap-2 text-sm text-indigo-500 hover:text-indigo-600 dark:hover:text-indigo-400">
+                    <div class="p-1.5 bg-indigo-500/10 rounded-md">
+                        <i data-lucide="external-link" class="w-4 h-4"></i>
+                    </div>
+                    <a href="{{ job.job_url }}" target="_blank" rel="noopener noreferrer" class="hover:underline">View Original Posting</a>
+                </div>
+                {% endif %}
             </div>
             
-            <div class="bento-card">
-                <div class="card-body p-4 p-md-5">
-                    <h4 class="fw-bold mb-4 d-flex align-items-center gap-2">
-                        <i data-lucide="award" class="text-primary" style="width: 24px; height: 24px;"></i>
-                        Skills
-                    </h4>
-                    
-                    {% if not required_skills and not optional_skills %}
-                        <div class="text-center py-4 text-muted bg-light rounded" style="border: 1px dashed #dee2e6;">
-                            <i data-lucide="tags" class="mb-2" style="width: 32px; height: 32px; opacity: 0.5;"></i>
-                            <p class="mb-0">No skills specified for this job.</p>
-                            <a href="{% url 'jobs:edit' job.pk %}" class="btn btn-sm btn-outline-primary mt-3">Add Skills</a>
-                        </div>
-                    {% else %}
-                        <div class="mb-4">
-                            <h6 class="fw-bold text-uppercase text-muted small mb-3">Required Skills</h6>
+            <hr class="my-6 border-[var(--border-color)]">
+            
+            <h4 class="text-sm font-semibold text-[var(--text-main)] mb-4">Job Description</h4>
+            <div class="text-sm text-[var(--text-muted)] leading-relaxed whitespace-pre-line prose prose-sm dark:prose-invert max-w-none">
+                {{ job.description }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="lg:col-span-1 animate-fade-in-up delay-100 opacity-0 space-y-6">
+        <!-- Skills -->
+        <div class="saas-card overflow-hidden">
+            <div class="px-5 py-4 border-b border-[var(--border-color)] bg-[var(--bg-surface-hover)] flex items-center gap-2">
+                <i data-lucide="award" class="w-4 h-4 text-[var(--accent)]"></i>
+                <h4 class="text-sm font-semibold text-[var(--text-main)]">Skills</h4>
+            </div>
+            
+            <div class="p-5">
+                {% if not required_skills and not optional_skills %}
+                    <div class="text-center py-6 text-[var(--text-muted)] bg-[var(--bg-surface-hover)] rounded-lg border border-dashed border-[var(--border-color)]">
+                        <i data-lucide="tags" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+                        <p class="text-sm mb-3">No skills specified.</p>
+                        <a href="{% url 'jobs:edit' job.pk %}" class="saas-btn-secondary text-xs">Add Skills</a>
+                    </div>
+                {% else %}
+                    <div class="space-y-5">
+                        <div>
+                            <h5 class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-3">Required Skills</h5>
                             {% if required_skills %}
-                                <div class="d-flex flex-wrap gap-2">
+                                <div class="flex flex-wrap gap-2">
                                     {% for js in required_skills %}
-                                        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800">
                                             {{ js.skill.name }}
                                         </span>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <p class="text-muted small">None specified.</p>
+                                <p class="text-xs text-[var(--text-muted)] italic">None specified.</p>
                             {% endif %}
                         </div>
                         
                         <div>
-                            <h6 class="fw-bold text-uppercase text-muted small mb-3">Optional Skills</h6>
+                            <h5 class="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-3">Optional Skills</h5>
                             {% if optional_skills %}
-                                <div class="d-flex flex-wrap gap-2">
+                                <div class="flex flex-wrap gap-2">
                                     {% for js in optional_skills %}
-                                        <span class="badge bg-light text-secondary border border-secondary border-opacity-25 rounded-pill px-3 py-2 fw-medium">
+                                        <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-[var(--bg-surface-hover)] text-[var(--text-muted)] border border-[var(--border-color)]">
                                             {{ js.skill.name }}
                                         </span>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <p class="text-muted small">None specified.</p>
+                                <p class="text-xs text-[var(--text-muted)] italic">None specified.</p>
                             {% endif %}
                         </div>
-                    {% endif %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
-            
         </div>
     </div>
 </div>
