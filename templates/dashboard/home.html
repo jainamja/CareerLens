@@ -4,124 +4,159 @@
 {% block title %}Dashboard | CareerLens{% endblock %}
 
 {% block content %}
-<div class="reveal-init">
-    <h1 class="display-font mb-2">Welcome back, <span class="headline-gradient">{{ request.user.username }}</span></h1>
-    <p class="text-muted fs-5 mb-5">Here's what's happening with your job search today.</p>
-</div>
-
-<div class="bento-grid">
-    <!-- Tall Resume Card -->
-    <div class="bento-tall glass-card reveal-init d-flex flex-column">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fs-4 m-0 d-flex align-items-center gap-2"><i data-lucide="file-text" style="color: var(--violet)"></i> Active Resumes</h3>
-            <a href="{% url 'resumes:list' %}" class="btn-glass p-2" style="border-radius: 50%;"><i data-lucide="arrow-right" style="width:18px;height:18px;"></i></a>
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 animate-fade-in-up">
+        <div>
+            <h1 class="text-2xl font-bold text-[var(--text-main)]">Overview</h1>
+            <p class="text-sm text-[var(--text-muted)]">Track your career progress and recent activity.</p>
         </div>
+        <div class="flex gap-2">
+            <a href="{% url 'resumes:list' %}" class="saas-btn-secondary text-sm">Upload Resume</a>
+            <a href="{% url 'jobs:list' %}" class="saas-btn-primary text-sm flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add Job
+            </a>
+        </div>
+    </div>
+
+    <!-- Stat Cards (Staggered) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 stagger-children">
         
-        {% if recent_resumes %}
-            <div class="d-flex flex-column gap-3 flex-grow-1 overflow-auto">
-            {% for resume in recent_resumes %}
-                <div class="p-3 rounded" style="background: rgba(255,255,255,0.03); border: 1px solid var(--stroke);">
-                    <div class="fw-bold text-white mb-1">{{ resume.title }}</div>
-                    <div class="text-muted small d-flex justify-content-between">
-                        <span>Updated {{ resume.updated_at|timesince }} ago</span>
+        <!-- Active Applications -->
+        <div class="saas-card p-5 stagger-item opacity-0">
+            <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-[var(--text-muted)]">Active Applications</p>
+                <div class="p-2 bg-indigo-500/10 text-indigo-500 dark:bg-indigo-400/10 dark:text-indigo-400 rounded-lg">
+                    <i data-lucide="briefcase" class="w-4 h-4"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[var(--text-main)] count-up-pending" data-count-to="{{ active_apps }}">0</span>
+                <span class="text-sm text-emerald-500 font-medium">in progress</span>
+            </div>
+        </div>
+
+        <!-- Total Matches -->
+        <div class="saas-card p-5 stagger-item opacity-0">
+            <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-[var(--text-muted)]">Total Matches</p>
+                <div class="p-2 bg-indigo-500/10 text-indigo-500 dark:bg-indigo-400/10 dark:text-indigo-400 rounded-lg">
+                    <i data-lucide="target" class="w-4 h-4"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[var(--text-main)] count-up-pending" data-count-to="{{ total_matches }}">0</span>
+                <span class="text-sm text-[var(--text-muted)] font-medium">calculated</span>
+            </div>
+        </div>
+
+        <!-- Resumes -->
+        <div class="saas-card p-5 stagger-item opacity-0">
+            <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-[var(--text-muted)]">Saved Resumes</p>
+                <div class="p-2 bg-indigo-500/10 text-indigo-500 dark:bg-indigo-400/10 dark:text-indigo-400 rounded-lg">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[var(--text-main)] count-up-pending" data-count-to="{{ total_resumes }}">0</span>
+                <span class="text-sm text-[var(--text-muted)] font-medium">uploaded</span>
+            </div>
+        </div>
+
+        <!-- Jobs Tracked -->
+        <div class="saas-card p-5 stagger-item opacity-0">
+            <div class="flex items-center justify-between">
+                <p class="text-sm font-medium text-[var(--text-muted)]">Jobs Tracked</p>
+                <div class="p-2 bg-indigo-500/10 text-indigo-500 dark:bg-indigo-400/10 dark:text-indigo-400 rounded-lg">
+                    <i data-lucide="bookmark" class="w-4 h-4"></i>
+                </div>
+            </div>
+            <div class="mt-4 flex items-baseline gap-2">
+                <span class="text-3xl font-bold text-[var(--text-main)] count-up-pending" data-count-to="{{ total_jobs }}">0</span>
+                <span class="text-sm text-[var(--text-muted)] font-medium">saved</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Middle Section: Recent Activity & Pipeline -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-on-scroll opacity-0">
+        
+        <!-- Recent Activity Feed -->
+        <div class="saas-card p-6 lg:col-span-2">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-base font-semibold text-[var(--text-main)]">Recent Activity</h2>
+            </div>
+            
+            <div class="space-y-6">
+                {% if activities %}
+                    <div class="relative border-l border-[var(--border-color)] ml-3 space-y-6">
+                        {% for activity in activities %}
+                            <div class="relative pl-6">
+                                <!-- Dot -->
+                                <span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-[var(--accent)] ring-4 ring-[var(--bg-surface)]"></span>
+                                
+                                <div class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+                                    <div>
+                                        <p class="text-sm font-medium text-[var(--text-main)]">{{ activity.activity_title }}</p>
+                                        <p class="text-sm text-[var(--text-muted)] mt-0.5">{{ activity.activity_desc }}</p>
+                                    </div>
+                                    <span class="text-xs text-[var(--text-muted)] whitespace-nowrap">
+                                        {{ activity.activity_time|timesince }} ago
+                                    </span>
+                                </div>
+                            </div>
+                        {% endfor %}
                     </div>
-                </div>
-            {% endfor %}
-            </div>
-        {% else %}
-            <div class="d-flex flex-column align-items-center justify-content-center h-100 text-center opacity-50 py-5">
-                <i data-lucide="file-plus" style="width: 48px; height: 48px; color: var(--muted); margin-bottom: 1rem;"></i>
-                <p>No resumes uploaded yet.</p>
-                <a href="{% url 'resumes:list' %}" class="btn-glass mt-2">Upload Resume</a>
-            </div>
-        {% endif %}
-    </div>
-
-    <!-- Wide Match Score Card -->
-    <div class="bento-wide glass-card reveal-init">
-        <h3 class="fs-4 mb-4 d-flex align-items-center gap-2"><i data-lucide="target" style="color: var(--amber)"></i> Average Match Score</h3>
-        <div class="d-flex align-items-center gap-4">
-            <div class="display-1 display-font text-white" style="line-height: 1;"><span class="stat-count text-white" data-target="86">0</span>%</div>
-            <div class="flex-grow-1">
-                <div class="d-flex justify-content-between text-muted mb-2 small">
-                    <span>Performance</span>
-                    <span style="color: var(--amber)">Top 15%</span>
-                </div>
-                <div class="progress-glass w-100">
-                    <div class="progress-bar-amber" data-width="86%"></div>
-                </div>
+                {% else %}
+                    <div class="text-center py-8">
+                        <i data-lucide="activity" class="w-8 h-8 text-[var(--border-color)] mx-auto mb-3"></i>
+                        <p class="text-sm text-[var(--text-muted)]">No recent activity found.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
-        <div class="mt-4 text-muted small d-flex align-items-center gap-2">
-            <i data-lucide="trending-up" style="color: var(--teal); width:16px;height:16px;"></i>
-            <span class="text-white">+12%</span> from last week
-        </div>
-    </div>
 
-    <!-- Small Stat Card -->
-    <div class="bento-stat glass-card reveal-init d-flex flex-column justify-content-center align-items-center text-center">
-        <div class="p-3 rounded-circle mb-3" style="background: rgba(63, 219, 192, 0.1);">
-            <i data-lucide="briefcase" style="color: var(--teal); width:28px;height:28px;"></i>
-        </div>
-        <h3 class="display-4 display-font text-white m-0 stat-count text-white" data-target="{{ stats.total_jobs|default:'0' }}">0</h3>
-        <p class="text-muted mt-2 m-0">Jobs Tracked</p>
-    </div>
-
-    <!-- Full-width Job Matches Card -->
-    <div class="bento-full glass-card reveal-init">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="fs-4 m-0 d-flex align-items-center gap-2"><i data-lucide="sparkles" style="color: var(--amber)"></i> Top Recommended Roles</h3>
-            <a href="{% url 'jobs:list' %}" class="btn-glass p-2 px-4 rounded-pill">View All</a>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table table-borderless text-white align-middle" style="background: transparent;">
-                <thead>
-                    <tr class="text-muted" style="border-bottom: 1px solid var(--stroke);">
-                        <th class="fw-normal pb-3">Role & Company</th>
-                        <th class="fw-normal pb-3 w-50">Match Score</th>
-                        <th class="fw-normal pb-3 text-end">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Mock Data to demonstrate the glass design system -->
-                    <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
-                        <td class="py-4">
-                            <div class="fw-bold fs-5">Senior Product Designer</div>
-                            <div class="text-muted small">Stripe  Remote</div>
-                        </td>
-                        <td class="py-4">
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="fw-bold text-white">94%</span>
-                                <div class="progress-glass flex-grow-1">
-                                    <div class="progress-bar-amber" data-width="94%"></div>
-                                </div>
+        <!-- Right Column: Application Pipeline & Missing Skills -->
+        <div class="space-y-6">
+            <!-- Pipeline -->
+            <div class="saas-card p-6">
+                <h2 class="text-base font-semibold text-[var(--text-main)] mb-4">Application Pipeline</h2>
+                <div class="space-y-4">
+                    {% for item in pipeline_data %}
+                        <div>
+                            <div class="flex justify-between text-sm mb-1.5">
+                                <span class="text-[var(--text-main)]">{{ item.label }}</span>
+                                <span class="text-[var(--text-muted)] font-medium">{{ item.count }}</span>
                             </div>
-                        </td>
-                        <td class="py-4 text-end">
-                            <button class="btn-primary-glow btn-glass rounded-pill px-4">Apply</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-4">
-                            <div class="fw-bold fs-5">Frontend Engineer</div>
-                            <div class="text-muted small">Vercel  San Francisco</div>
-                        </td>
-                        <td class="py-4">
-                            <div class="d-flex align-items-center gap-3">
-                                <span class="fw-bold text-white">88%</span>
-                                <div class="progress-glass flex-grow-1">
-                                    <div class="progress-bar-violet" data-width="88%"></div>
-                                </div>
+                            <div class="w-full bg-[var(--border-color)] rounded-full h-1.5 overflow-hidden">
+                                <div class="bg-[var(--accent)] h-1.5 rounded-full" style="width: {% if total_apps %}{% widthratio item.count total_apps 100 %}{% else %}0{% endif %}%;"></div>
                             </div>
-                        </td>
-                        <td class="py-4 text-end">
-                            <button class="btn-glass rounded-pill px-4">Review</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        </div>
+                    {% empty %}
+                        <p class="text-sm text-[var(--text-muted)] text-center py-4">No applications yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Missing Skills from Matches -->
+            <div class="saas-card p-6">
+                <h2 class="text-base font-semibold text-[var(--text-main)] mb-4">Top Missing Skills</h2>
+                <div class="flex flex-wrap gap-2">
+                    {% if missing_skills %}
+                        {% for skill, count in missing_skills %}
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-red-500/10 text-red-600 dark:bg-red-400/10 dark:text-red-400 border border-red-500/20">
+                                {{ skill }} ({{ count }})
+                            </span>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-sm text-[var(--text-muted)] text-center w-full py-4">Run job matches to see missing skills.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
+
     </div>
 </div>
-{% endblock %}
+{% endblock %}
