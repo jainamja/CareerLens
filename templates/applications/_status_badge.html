@@ -1,29 +1,35 @@
 {% if status == 'saved' %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(139, 147, 166, 0.1); color: var(--muted); border: 1px solid rgba(139, 147, 166, 0.2);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-zinc-400"></span>
+    {{ label }}
+</span>
 {% elif status == 'applied' %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(140, 124, 255, 0.1); color: var(--violet); border: 1px solid rgba(140, 124, 255, 0.2);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 border border-blue-200 dark:border-blue-800">
+    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-blue-500"></span>
+    {{ label }}
+</span>
 {% elif status == 'assessment' %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(63, 219, 192, 0.1); color: var(--teal); border: 1px solid rgba(63, 219, 192, 0.2);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400 border border-purple-200 dark:border-purple-800">
+    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-purple-500"></span>
+    {{ label }}
+</span>
 {% elif status == 'interview' %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(245, 178, 63, 0.1); color: var(--amber); border: 1px solid rgba(245, 178, 63, 0.2);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-amber-500"></span>
+    {{ label }}
+</span>
 {% elif status == 'offer' %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(40, 167, 69, 0.1); color: #4ade80; border: 1px solid rgba(40, 167, 69, 0.2);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-emerald-500"></span>
+    {{ label }}
+</span>
 {% elif status == 'rejected' %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(220, 53, 69, 0.1); color: #ff6b6b; border: 1px solid rgba(220, 53, 69, 0.2);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 dark:bg-red-900/30 dark:text-red-400 border border-red-200 dark:border-red-800">
+    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-red-500"></span>
+    {{ label }}
+</span>
 {% else %}
-    <span class="badge rounded-pill px-2 py-1 fw-medium" style="background: rgba(255, 255, 255, 0.05); color: var(--text); border: 1px solid rgba(255, 255, 255, 0.1);">
-        {{ label }}
-    </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700">
+    {{ label }}
+</span>
 {% endif %}

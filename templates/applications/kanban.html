@@ -3,96 +3,220 @@
 {% block title %}Applications Kanban - CareerLens{% endblock %}
 
 {% block content %}
-<div class="reveal-init mb-4">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+<div class="mb-6 animate-fade-in-up">
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-            <h1 class="display-font h2 mb-2">Applications Board</h1>
-            <p class="text-muted fs-5 mb-0">Track your job applications and keep your search organized.</p>
+            <h1 class="text-2xl font-bold text-[var(--text-main)]">Applications Board</h1>
+            <p class="text-sm text-[var(--text-muted)] mt-1">Drag and drop applications to update their status.</p>
         </div>
-        <div class="d-flex align-items-center gap-2">
-            <div class="btn-group p-1 glass-base" style="border-radius: 999px;">
-                <a href="{% url 'applications:list' %}" class="btn rounded-pill d-flex align-items-center gap-2 text-white" style="border: none;" title="List View">
-                    <i data-lucide="list" style="width: 16px; height: 16px;"></i>
-                    List
+        <div class="flex items-center gap-3">
+            <!-- View Toggle -->
+            <div class="bg-[var(--bg-surface-hover)] p-1 rounded-lg flex items-center border border-[var(--border-color)]">
+                <a href="{% url 'applications:list' %}" class="px-3 py-1.5 rounded-md text-[var(--text-muted)] hover:text-[var(--text-main)] text-sm font-medium focus-ring-indigo transition-all">
+                    <i data-lucide="list" class="w-4 h-4 inline-block mr-1"></i> List
                 </a>
-                <a href="{% url 'applications:kanban' %}" class="btn rounded-pill d-flex align-items-center gap-2 text-dark bg-white" style="border: none; font-weight: 500;" title="Kanban View">
-                    <i data-lucide="layout-grid" style="width: 16px; height: 16px;"></i>
-                    Kanban
+                <a href="{% url 'applications:kanban' %}" class="px-3 py-1.5 rounded-md bg-[var(--bg-surface)] text-[var(--text-main)] shadow-sm text-sm font-medium focus-ring-indigo transition-all">
+                    <i data-lucide="layout-grid" class="w-4 h-4 inline-block mr-1"></i> Kanban
                 </a>
             </div>
-            <a href="{% url 'applications:create' %}" class="btn-primary-glow btn-glass ms-2">
-                <i data-lucide="plus" style="width: 16px; height: 16px;"></i>
-                Add Application
+            
+            <a href="{% url 'applications:create' %}" class="saas-btn-primary text-sm flex items-center gap-2">
+                <i data-lucide="plus" class="w-4 h-4"></i> Add
             </a>
         </div>
     </div>
 </div>
 
 <!-- Search Form -->
-<div class="glass-card mb-5 reveal-init p-3" style="max-width: 500px;">
-    <form method="get" class="d-flex align-items-center">
-        <div class="input-group">
-            <span class="input-group-text bg-transparent border-0 text-white">
-                <i data-lucide="search" style="width: 18px; height: 18px;"></i>
-            </span>
-            <input type="text" name="q" class="form-control form-control-glass border-0 shadow-none bg-transparent text-white ps-0" placeholder="Search applications..." value="{{ search_query|default:'' }}">
+<div class="saas-card p-4 mb-6 animate-fade-in-up delay-50 opacity-0 max-w-md">
+    <form method="get" class="flex gap-3">
+        <div class="flex-1 relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <i data-lucide="search" class="w-4 h-4 text-[var(--text-muted)]"></i>
+            </div>
+            <input type="text" name="q" value="{{ search_query|default:'' }}" placeholder="Search company or title..." 
+                   class="saas-input w-full pl-9 focus-ring-indigo text-sm">
         </div>
-        <button type="submit" class="btn-glass px-4 py-2 ms-2">Search</button>
+        <button type="submit" class="saas-btn-secondary text-sm">Search</button>
         {% if search_query %}
-            <a href="{% url 'applications:kanban' %}" class="btn-link nav-link-sweep text-white ms-3">Clear</a>
+            <a href="{% url 'applications:kanban' %}" class="flex items-center justify-center px-3 text-sm text-[var(--text-muted)] hover:text-[var(--text-main)]">Clear</a>
         {% endif %}
     </form>
 </div>
 
-<!-- Kanban Board -->
-<div class="d-flex overflow-auto gap-4 pb-4 reveal-init" style="min-height: 60vh; snap-type: x mandatory;">
+<!-- Kanban Board via AlpineJS -->
+<div x-data="kanbanBoard()" class="flex overflow-x-auto gap-4 pb-8 min-h-[60vh] animate-fade-in-up delay-100 opacity-0 snap-x">
     {% for col in columns %}
-        <div class="d-flex flex-column" style="min-width: 320px; max-width: 320px; scroll-snap-align: start;">
-            <div class="d-flex align-items-center justify-content-between mb-3 px-1">
-                <h6 class="fw-bold text-uppercase mb-0 d-flex align-items-center gap-2" style="color: var(--amber); letter-spacing: 1px;">
+        <!-- Column -->
+        <div class="flex flex-col min-w-[320px] max-w-[320px] shrink-0 snap-start kanban-col rounded-xl border border-transparent transition-colors duration-200"
+             @dragover="onDragOver"
+             @dragleave="onDragLeave"
+             @drop="onDrop($event, '{{ col.id }}')">
+            
+            <!-- Column Header -->
+            <div class="flex items-center justify-between mb-3 px-1">
+                <h6 class="font-bold text-xs uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-2">
                     {{ col.label }}
-                    <span class="badge bg-white bg-opacity-10 text-white rounded-pill px-3">{{ col.apps|length }}</span>
+                    <span class="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-[var(--bg-surface-hover)] text-[var(--text-main)] border border-[var(--border-color)] counter" id="count-{{ col.id }}">
+                        {{ col.apps|length }}
+                    </span>
                 </h6>
             </div>
             
-            <div class="d-flex flex-column gap-3 p-3 rounded-4" style="min-height: 150px; background: rgba(255,255,255,0.02); border: 1px solid var(--stroke);">
+            <!-- Column List -->
+            <div class="flex-1 bg-[var(--bg-surface-hover)] rounded-xl border border-[var(--border-color)] p-3 flex flex-col gap-3 kanban-list relative min-h-[150px]">
                 {% for app in col.apps %}
-                    <div class="glass-card cursor-pointer p-3 position-relative transition-all" style="border-radius: 12px; background: rgba(255,255,255,0.04);">
-                        <a href="{% url 'applications:detail' app.pk %}" class="stretched-link"></a>
-                        <h6 class="fw-bold mb-1 text-truncate text-white" title="{{ app.job.title }}">{{ app.job.title }}</h6>
-                        <p class="text-muted small mb-2 d-flex align-items-center gap-2 text-truncate" title="{{ app.job.company }}">
-                            <i data-lucide="building-2" style="width: 14px; height: 14px; color: var(--violet);"></i>
-                            {{ app.job.company }}
-                        </p>
+                    <!-- Draggable Card -->
+                    <div id="app-{{ app.pk }}" 
+                         draggable="true"
+                         @dragstart="onDragStart($event, '{{ app.pk }}', '{{ col.id }}')"
+                         @dragend="onDragEnd"
+                         class="saas-card p-4 cursor-grab active:cursor-grabbing hover:border-indigo-500/50 transition-colors relative bg-[var(--bg-surface)]">
                         
-                        {% if app.job.location %}
-                            <p class="text-muted small mb-3 text-truncate d-flex align-items-center gap-2">
-                                <i data-lucide="map-pin" style="width: 14px; height: 14px; color: var(--teal);"></i>
-                                {{ app.job.location }}
+                        <!-- Hidden Form to submit status change -->
+                        <form id="form-{{ app.pk }}" action="{% url 'applications:edit' app.pk %}" method="POST" class="hidden">
+                            {% csrf_token %}
+                            <input type="hidden" name="job" value="{{ app.job.id }}">
+                            <input type="hidden" name="status" value="{{ app.status }}" class="app-status-input">
+                            <input type="hidden" name="applied_date" value="{% if app.applied_date %}{{ app.applied_date|date:'Y-m-d' }}{% endif %}">
+                            <input type="hidden" name="notes" value="{{ app.notes }}">
+                        </form>
+
+                        <a href="{% url 'applications:detail' app.pk %}" class="absolute inset-0 z-0"></a>
+                        
+                        <div class="relative z-10 pointer-events-none">
+                            <h6 class="font-semibold text-[var(--text-main)] truncate" title="{{ app.job.title }}">{{ app.job.title }}</h6>
+                            <p class="text-[var(--text-muted)] text-xs mt-1 flex items-center gap-1.5 truncate" title="{{ app.job.company }}">
+                                <i data-lucide="building-2" class="w-3.5 h-3.5 text-[var(--accent)]"></i>
+                                {{ app.job.company }}
                             </p>
-                        {% endif %}
-                        
-                        <div class="d-flex justify-content-between align-items-center mt-3 pt-3" style="border-top: 1px solid var(--stroke);">
-                            <span class="text-muted" style="font-size: 0.75rem;">
-                                {% if app.applied_date %}
-                                    Applied {{ app.applied_date|date:"M j" }}
-                                {% else %}
-                                    Updated {{ app.updated_at|date:"M j" }}
-                                {% endif %}
-                            </span>
-                            <span class="text-white d-flex align-items-center gap-1" style="font-size: 0.8rem; font-weight: 500;">
-                                View <i data-lucide="arrow-right" style="width:14px;height:14px; color: var(--amber);"></i>
-                            </span>
+                            
+                            {% if app.job.location %}
+                                <p class="text-[var(--text-muted)] text-xs mt-1 truncate flex items-center gap-1.5">
+                                    <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
+                                    {{ app.job.location }}
+                                </p>
+                            {% endif %}
+                            
+                            <div class="flex justify-between items-center mt-3 pt-3 border-t border-[var(--border-color)]">
+                                <span class="text-xs text-[var(--text-muted)]">
+                                    {% if app.applied_date %}
+                                        Applied {{ app.applied_date|date:"M j" }}
+                                    {% else %}
+                                        Updated {{ app.updated_at|date:"M j" }}
+                                    {% endif %}
+                                </span>
+                                <i data-lucide="grip-horizontal" class="w-4 h-4 text-[var(--text-muted)] opacity-50"></i>
+                            </div>
                         </div>
                     </div>
                 {% empty %}
-                    <div class="text-center py-5 text-muted h-100 d-flex flex-column align-items-center justify-content-center" style="border: 1px dashed rgba(255,255,255,0.1); border-radius: 12px;">
-                        <i data-lucide="inbox" style="width: 32px; height: 32px; opacity: 0.3; margin-bottom: 0.5rem;"></i>
-                        <span style="font-size: 0.85rem;">No applications</span>
+                    <div class="empty-state text-center py-6 text-[var(--text-muted)] flex flex-col items-center justify-center opacity-50">
+                        <i data-lucide="inbox" class="w-6 h-6 mb-2"></i>
+                        <span class="text-xs">Drop here</span>
                     </div>
                 {% endfor %}
             </div>
         </div>
     {% endfor %}
 </div>
+
+{% block extra_js %}
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('kanbanBoard', () => ({
+        draggedAppId: null,
+        draggedStatus: null,
+        
+        onDragStart(e, appId, currentStatus) {
+            this.draggedAppId = appId;
+            this.draggedStatus = currentStatus;
+            e.dataTransfer.effectAllowed = 'move';
+            // Required for Firefox
+            e.dataTransfer.setData('text/plain', appId); 
+            
+            setTimeout(() => {
+                e.target.classList.add('opacity-40');
+            }, 0);
+        },
+        
+        onDragEnd(e) {
+            e.target.classList.remove('opacity-40');
+            this.draggedAppId = null;
+            
+            // clear highlights
+            document.querySelectorAll('.kanban-col').forEach(el => {
+                el.classList.remove('bg-indigo-500/5', 'dark:bg-indigo-500/10', 'border-indigo-500/20');
+            });
+        },
+        
+        onDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const col = e.currentTarget;
+            col.classList.add('bg-indigo-500/5', 'dark:bg-indigo-500/10', 'border-indigo-500/20');
+        },
+        
+        onDragLeave(e) {
+            const col = e.currentTarget;
+            col.classList.remove('bg-indigo-500/5', 'dark:bg-indigo-500/10', 'border-indigo-500/20');
+        },
+        
+        onDrop(e, newStatus) {
+            e.preventDefault();
+            const col = e.currentTarget;
+            col.classList.remove('bg-indigo-500/5', 'dark:bg-indigo-500/10', 'border-indigo-500/20');
+            
+            if (!this.draggedAppId || this.draggedStatus === newStatus) return;
+            
+            const appId = this.draggedAppId;
+            const appCard = document.getElementById('app-' + appId);
+            const listEl = col.querySelector('.kanban-list');
+            
+            if (listEl && appCard) {
+                // Remove empty state if present
+                const empty = listEl.querySelector('.empty-state');
+                if (empty) empty.style.display = 'none';
+                
+                listEl.appendChild(appCard);
+                
+                // Update counts visually
+                const oldCounter = document.getElementById('count-' + this.draggedStatus);
+                const newCounter = document.getElementById('count-' + newStatus);
+                if (oldCounter) oldCounter.innerText = parseInt(oldCounter.innerText) - 1;
+                if (newCounter) newCounter.innerText = parseInt(newCounter.innerText) + 1;
+                
+                // Show empty state in old col if 0
+                const oldColList = document.querySelector(`[x-on\\:drop*="'${this.draggedStatus}'"] .kanban-list`);
+                if (oldColList && oldColList.children.length === 1 && oldColList.querySelector('.empty-state')) {
+                    oldColList.querySelector('.empty-state').style.display = 'flex';
+                }
+            }
+            
+            // Background Form Submission
+            const form = document.getElementById('form-' + appId);
+            if (form) {
+                const statusInput = form.querySelector('.app-status-input');
+                if (statusInput) statusInput.value = newStatus;
+                
+                const formData = new FormData(form);
+                fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                }).then(response => {
+                    if (!response.ok && !response.redirected) {
+                        console.error('Update failed');
+                    }
+                }).catch(err => console.error(err));
+            }
+            
+            this.draggedStatus = newStatus;
+        }
+    }));
+});
+</script>
+{% endblock %}
 {% endblock %}
