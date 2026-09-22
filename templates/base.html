@@ -49,7 +49,7 @@
     </script>
     
     <!-- Custom SaaS Theme CSS -->
-    <link rel="stylesheet" href="{% static 'css/saas-theme.css' %}?v=1.0">
+    <link rel="stylesheet" href="{% static 'css/saas-theme.css' %}?v=1.1">
     
     <!-- NProgress -->
     <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css">
@@ -60,7 +60,7 @@
         #nprogress .peg { box-shadow: 0 0 10px #6366f1, 0 0 5px #6366f1 !important; }
     </style>
     
-    <!-- AlpineJS for interactive components (sidebar/dropdowns) -->
+    <!-- AlpineJS for interactive components -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
     {% block extra_css %}{% endblock %}
@@ -91,6 +91,7 @@
     {% endif %}
 
     {% if request.user.is_authenticated %}
+    <!-- AUTHENTICATED LAYOUT START -->
     <div x-data="{ sidebarOpen: false }" class="flex h-screen overflow-hidden">
         
         <!-- Mobile sidebar backdrop -->
@@ -188,23 +189,18 @@
                         <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
                     </button>
 
-                    <!-- User Avatar -->
+                    <!-- User Avatar (safe check in case username is empty string) -->
                     <div class="w-8 h-8 rounded-full bg-[var(--accent)] text-white flex items-center justify-center flex-shrink-0 font-semibold text-sm shadow-sm ring-2 ring-[var(--bg-base)]">
-                        {{ request.user.username|make_list|first|upper }}
+                        {{ request.user.username|slice:":1"|upper }}
                     </div>
                 </div>
             </header>
 
-            <!-- Main Content -->
+            <!-- Main Content Area -->
             <main class="flex-1 overflow-y-auto bg-[var(--bg-base)] p-4 sm:p-6 lg:p-8 relative">
                 <div class="max-w-7xl mx-auto">
-                    {% block content %}{% endblock %}
-                </div>
-            </main>
-        </div>
-    </div>
     {% else %}
-        <!-- For non-authenticated pages like landing, login, register -->
+    <!-- UNAUTHENTICATED LAYOUT START -->
         <div class="min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[var(--bg-base)] relative">
             <!-- Dark mode toggle (auth pages) -->
             <button onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');" 
@@ -214,16 +210,26 @@
             </button>
             
             {% block auth_content %}{% endblock %}
-            
-            {% if not request.resolver_match.app_name == 'accounts' %}
-                <!-- Keep the content block for non-auth unauthenticated views like the landing page -->
-                {% block content %}{% endblock %}
-            {% endif %}
+    {% endif %}
+
+            <!-- ============================================== -->
+            <!-- SINGLE DECLARATION OF CONTENT BLOCK (REQUIRED) -->
+            <!-- ============================================== -->
+            {% block content %}{% endblock %}
+
+    {% if request.user.is_authenticated %}
+    <!-- AUTHENTICATED LAYOUT END -->
+                </div>
+            </main>
+        </div>
+    </div>
+    {% else %}
+    <!-- UNAUTHENTICATED LAYOUT END -->
         </div>
     {% endif %}
 
     <!-- Custom JS -->
-    <script src="{% static 'js/saas-animations.js' %}?v=1.0"></script>
+    <script src="{% static 'js/saas-animations.js' %}?v=1.1"></script>
     
     <script>
         // Init theme from localStorage
