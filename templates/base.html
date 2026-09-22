@@ -189,7 +189,7 @@
                     </button>
 
                     <!-- User Avatar -->
-                    <div class="w-8 h-8 rounded-full bg-[var(--accent)] text-white flex items-center justify-content-center flex-shrink-0 flex items-center justify-center font-semibold text-sm shadow-sm ring-2 ring-[var(--bg-base)]">
+                    <div class="w-8 h-8 rounded-full bg-[var(--accent)] text-white flex items-center justify-center flex-shrink-0 font-semibold text-sm shadow-sm ring-2 ring-[var(--bg-base)]">
                         {{ request.user.username|make_list|first|upper }}
                     </div>
                 </div>
@@ -205,15 +205,20 @@
     </div>
     {% else %}
         <!-- For non-authenticated pages like landing, login, register -->
-        <div class="min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[var(--bg-base)]">
+        <div class="min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 bg-[var(--bg-base)] relative">
             <!-- Dark mode toggle (auth pages) -->
             <button onclick="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');" 
-                    class="absolute top-4 right-4 p-2 text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-full focus-ring-indigo bg-[var(--bg-surface)] border border-[var(--border-color)] transition-colors shadow-sm">
+                    class="absolute top-4 right-4 p-2 text-[var(--text-muted)] hover:text-[var(--text-main)] rounded-full focus-ring-indigo bg-[var(--bg-surface)] border border-[var(--border-color)] transition-colors shadow-sm z-50">
                 <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
                 <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
             </button>
+            
             {% block auth_content %}{% endblock %}
-            {% block content %}{% endblock %}
+            
+            {% if not request.resolver_match.app_name == 'accounts' %}
+                <!-- Keep the content block for non-auth unauthenticated views like the landing page -->
+                {% block content %}{% endblock %}
+            {% endif %}
         </div>
     {% endif %}
 
